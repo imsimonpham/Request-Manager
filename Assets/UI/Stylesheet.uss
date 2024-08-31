@@ -50,7 +50,7 @@
     /*background-color: blue;*/
 }
 
-.singleTaskContainer{
+.singleRequestContainer{
     width: 96%;
     height: 200px;
     background-color: rgba(240, 240, 240, 0.2);
@@ -59,36 +59,15 @@
     border-radius: 20px;
     padding: 10px 15px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     margin-bottom: 30px;
 }
 
-.singleTaskContainer.highPriority{
+.singleRequestContainer.highPriority{
     background-color: rgb(255, 229, 229);
     border-color: rgb(255, 26, 26);
 }
-
-/*.btnContainer{
-    width: 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}*/
-
-.requestContainer{
-    display: flex;
-    justify-content: space-between;
-}
-
-/*.completionButton{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: white;
-    border-width: 2px;
-}*/
-
 
 /* scroll bar*/
 .unity-scroller__low-button{

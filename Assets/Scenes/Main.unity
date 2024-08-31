@@ -228,14 +228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e399a5cc8d1a34382793fdb534c140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseURL: https://sheets.googleapis.com/v4/spreadsheets/
-  property: /values/
-  keyString: ?key=
-  tabName: Today
-  apiKey: AIzaSyCCzE8MUPDIQPFovwiYAgmaZBtA5Y1_lHs
-  sheetId: 16ZNq8X-tG6_l7dOviIyPOnpbjfgaqsFocbO5aRvzLPo
-  url: 
-  _taskList: {fileID: 2057400230}
+  _requestkListUI: {fileID: 2057400230}
+  _requestEntries: []
 --- !u!1 &531654761
 GameObject:
   m_ObjectHideFlags: 0
