@@ -1,10 +1,11 @@
 using System;
+using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 using UnityEngine.Networking;
-using TMPro;
+using UnityEngine.UIElements;
 
 public class ReadGoogleSheet : MonoBehaviour
 {
@@ -19,9 +20,11 @@ public class ReadGoogleSheet : MonoBehaviour
 
     [Header("UI")] 
     [SerializeField] private RequestListUI _requestkListUI;
+    private Dictionary<string, VisualElement> _requestUIDict = new Dictionary<string, VisualElement>();
     
+    [Header("Request Data")] 
     [SerializeField] private List<Request> _requestList= new List<Request>(); //for debug purposes
-    private Dictionary<string, Request> _requestDictionary = new Dictionary<string, Request>();
+    private Dictionary<string, Request> _requestDict = new Dictionary<string, Request>();
 
     private void Awake()
     {
@@ -31,7 +34,6 @@ public class ReadGoogleSheet : MonoBehaviour
     private void Start()
     {
         _url = _baseURL + _sheetId + _property + _tabName + _keyString + _apiKey;
-       
         InvokeRepeating("ObtainSheetDataRoutine", 0f, 1f);
     }
 
@@ -74,21 +76,33 @@ public class ReadGoogleSheet : MonoBehaviour
                         request.timeCompleted = "";
                         request.handler = "";
 
-                        if (!_requestDictionary.ContainsKey(request.id))
+                        if (!_requestDict.ContainsKey(request.id)) 
                         {
-                            _requestList.Add(request); //debug purposes
-                            _requestDictionary.Add(request.id, request);
-                            _requestkListUI.CreateSingleRequest(request.timeReceived, request.area, request.details, request.priority);
+                            _requestList.Add(request); //debug
+                            //add a new request
+                            _requestDict.Add(request.id, request); 
                         }
-                        else
+                        else 
                         {
-                            _requestDictionary[request.id] = request;
+                            //update request
+                            _requestDict[request.id] = request;
+                            //debug
                             var existingRequest = _requestList.Find(r => r.id == request.id);
                             if(existingRequest != null)
                             {
                                 int index = _requestList.IndexOf(existingRequest);
                                 _requestList[index] = request;
                             }
+                        }
+
+                        if (!_requestUIDict.ContainsKey(request.id))
+                        {
+                            VisualElement requestUI = _requestkListUI.CreateSingleRequest(request.timeReceived, request.area, request.details, request.priority);
+                            _requestUIDict.Add(request.id, requestUI);
+                        }
+                        else
+                        {
+                            _requestkListUI.UpdateSingleRequest(_requestUIDict[request.id], request.area, request.details, request.priority);
                         }
                     }
                 }
@@ -99,31 +113,5 @@ public class ReadGoogleSheet : MonoBehaviour
             Debug.LogError("Error: " + www.error);
         }
     }
-    
-    void UpdateRequestist()
-    {
-        foreach (KeyValuePair<string, Request> kvp in _requestDictionary)
-        {
-            
-        }
-    }
 }
 
-[Serializable]
-public class Request
-{
-    public string id;
-    public string timeReceived;
-    public string area;
-    public string guestName;
-    public string details;
-    public string type;
-    public string receiver;
-    public string priority;
-    public string submitter;
-    public string isSent;
-    public string status;
-    public string resolutionDetails;
-    public string timeCompleted;
-    public string handler;
-}

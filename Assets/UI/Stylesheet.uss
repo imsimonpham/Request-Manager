@@ -34,6 +34,16 @@
     color: grey;
 }
 
+.red{
+    color: red;
+    -unity-font-style: bold;
+}
+
+.yellow{
+    color: #FFBF00;
+    -unity-font-style: bold;
+}
+
 /* Specific classes */
 .container{
     background-color: white;
@@ -53,7 +63,7 @@
 .singleRequestContainer{
     width: 96%;
     height: 200px;
-    background-color: rgba(240, 240, 240, 0.2);
+    background-color: rgb(245,245,220);
     border-width: 2px;
     border-color: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
@@ -67,6 +77,12 @@
 .singleRequestContainer.highPriority{
     background-color: rgb(255, 229, 229);
     border-color: rgb(255, 26, 26);
+}
+
+.bottomContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /* scroll bar*/
