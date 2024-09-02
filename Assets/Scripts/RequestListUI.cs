@@ -19,7 +19,7 @@ public class RequestListUI : MonoBehaviour
         StartCoroutine(Generate());
     }
 
-    public IEnumerator Generate()
+    private IEnumerator Generate()
     {
         yield return null;
         var root = _doc.rootVisualElement;
@@ -27,19 +27,17 @@ public class RequestListUI : MonoBehaviour
         
         root.styleSheets.Add(_styleSheet);
 
-        var container = Create("container");
-        root.Add(container);
+        //container
+        var container = CreateAndAddToParent<VisualElement>("container", root);
         
-        //app title
-        var title = Create<Label>("h1");
+        //tab title
+        var title = CreateAndAddToParent<Label>("h1", container);
         title.AddToClassList("title");
-        title.text = "Today";
-        container.Add(title);
+        UpdateLabel(title, "Today", "title");
         
         //task list title
-        var requestText = Create<Label>("h2");
-        requestText.text = "Pending Requests";
-        container.Add(requestText);
+        var requestText = CreateAndAddToParent<Label>("h2", container);
+        UpdateLabel(requestText, "Pending Requests", "subtitle");
         
         //task collection container
         _requestsContainer = new ScrollView(ScrollViewMode.Vertical);
@@ -50,112 +48,118 @@ public class RequestListUI : MonoBehaviour
         /*VisualElement requestUI = CreateSingleRequest("10:46:01 AM", "936", "Power to please", "Medium");*/
     }
 
-    VisualElement Create(string className) {return Create<VisualElement>(className);}
+    
+    public VisualElement  CreateRequestCard(string timeReceived, string area, string requestDetails, string priority)
+    {
+        //task container
+        var requestCard = CreateAndAddToParent<VisualElement>("requestCard", _requestsContainer);
+        
+        //area text
+        var areaText = CreateAndAddToParent<Label>("h3", requestCard);
+        UpdateLabel(areaText, area, "area");
+        TrimText(areaText, 40);
+        
+        //request text
+        var requestText = CreateAndAddToParent<Label>("h4", requestCard);
+        requestText.AddToClassList("wrappedText");
+        UpdateLabel(requestText, requestDetails, "request");
+        TrimText(requestText, 85);
+            
+        //time text + priority tex
+        var bottomContainer = CreateAndAddToParent<VisualElement>("bottomContainer", requestCard);
+        
+        var timeText = CreateAndAddToParent<Label>("h4", bottomContainer);
+        timeText.AddToClassList("grey");
+        UpdateLabel(timeText, timeReceived, "timeReceived");
+        
+        var priorityText = CreateAndAddToParent<Label>("h4", bottomContainer);
+        UpdateLabel(priorityText, priority + " priority", "priority");
+        SetPriorityUI(priority, priorityText);
+        
+        return requestCard;
+    }
 
+    public void UpdateRequestCard(VisualElement request, string area, string requestDetails, string priority)
+    {
+        var areaText = request.Q<Label>(name: "area");
+        if (areaText != null)
+            UpdateAndTrimText(areaText, 40, area);
+        
+        var requestText = request.Q<Label>(name: "request");
+        if (requestText != null)
+            UpdateAndTrimText(requestText, 85, requestDetails);
+        
+        var priorityText = request.Q<Label>(name: "priority");
+        if (priorityText != null)
+            UpdatePriority(priority, priorityText);
+    }
+    
+    #region Utility Functions
+
+    void UpdateLabel(Label label, string text, string labelName)
+    {
+        label.text = text;
+        label.name = labelName;
+    }
+    
     T Create<T>(string className) where T : VisualElement, new()
     {
         var el = new T();
         el.AddToClassList(className);
         return el;
     }
-    
-    string TrimText(Label label, int maxLength)
+
+    T CreateAndAddToParent<T>(string className, VisualElement parent) where T : VisualElement, new()
     {
-        if (label.text.Length <= maxLength) {return label.text;}
-        return label.text.Substring(0, maxLength) + "...";
+        var el = new T();
+        el.AddToClassList(className);
+        parent.Add(el);
+        return el;
+    }
+    
+    void TrimText(Label label, int maxLength)
+    {
+        if (label.text.Length > maxLength)
+            label.text = label.text.Substring(0, maxLength) + "...";
+    }
+    
+    void UpdateAndTrimText(Label label, int maxLength, string text)
+    {
+        label.text = text;
+        if (label.text.Length > maxLength)
+            label.text = label.text.Substring(0, maxLength) + "...";
     }
 
-    public VisualElement  CreateSingleRequest(string timeReceived, string area, string requestDetails, string priority)
+    void SetPriorityUI(string priorityData, Label priorityText)
     {
-        //task container
-        var singleRequestContainer = Create("singleRequestContainer");
-        if (_requestsContainer != null)
+        if (priorityData == "High")
         {
-            _requestsContainer.Add(singleRequestContainer);
-        }
-        else
-        {
-            Debug.LogError("container is null");
-        }
-            
-        //area text
-        var areaText = Create<Label>("h3");
-        areaText.name = "area";
-        areaText.text = area;
-        areaText.text = TrimText(areaText, 40);
-        singleRequestContainer.Add(areaText);
-        
-        //request text
-        var requestText = Create<Label>("h4");
-        requestText.name = "request";
-        requestText.AddToClassList("wrappedText");
-        requestText.text = requestDetails;
-        requestText.text = TrimText(requestText, 85);
-        singleRequestContainer.Add(requestText);
-            
-        //time text + priority tex
-        var bottomContainer = Create("bottomContainer");
-        var timeText = Create<Label>("h4");
-        var priorityText = Create<Label>("h4");
-        priorityText.name = "priority";
-        timeText.AddToClassList("grey");
-        timeText.text = timeReceived;
-        priorityText.text = priority + " priority";
-        
-        if (priority == "High")
-        {
-            singleRequestContainer.AddToClassList("highPriority");
+            priorityText.parent.parent.AddToClassList("highPriority");
             priorityText.AddToClassList("red");
-            /*priorityText.RemoveFromClassList("yellow");*/
         }
         else
         {
-            singleRequestContainer.RemoveFromClassList("highPriority");
+            priorityText.parent.parent.RemoveFromClassList("highPriority");
             priorityText.AddToClassList("yellow");
-            /*priorityText.RemoveFromClassList("red");*/
         }
-        
-        bottomContainer.Add(timeText);
-        bottomContainer.Add(priorityText);
-        singleRequestContainer.Add(bottomContainer);
-
-        return singleRequestContainer;
     }
 
-    public void UpdateSingleRequest(VisualElement request, string area, string requestDetails, string priority)
+    void UpdatePriority(string priorityData, Label priorityText)
     {
-        var areaText = request.Q<Label>(name: "area");
-        if (areaText != null)
+        priorityText.text = priorityData + " priority";
+        if (priorityData == "High")
         {
-            areaText.text = area;
-            areaText.text = TrimText(areaText, 40);
+            priorityText.AddToClassList("red");
+            priorityText.RemoveFromClassList("yellow");
+            priorityText.parent.parent.AddToClassList("highPriority");
         }
-        
-        var requestText = request.Q<Label>(name: "request");
-        if (requestText != null)
+        else
         {
-            requestText.text = requestDetails;
-            requestText.text = TrimText(requestText, 85);
-        }
-        
-        var priorityText = request.Q<Label>(name: "priority");
-        if (priorityText != null)
-        {
-            priorityText.text = priority + " priority";
-
-            if (priority == "High")
-            {
-                priorityText.AddToClassList("red");
-                priorityText.RemoveFromClassList("yellow");
-                priorityText.parent.parent.AddToClassList("highPriority");
-            }
-            else
-            {
-                priorityText.AddToClassList("yellow");
-                priorityText.RemoveFromClassList("red");
-                priorityText.parent.parent.RemoveFromClassList("highPriority");
-            }
+            priorityText.AddToClassList("yellow");
+            priorityText.RemoveFromClassList("red");
+            priorityText.parent.parent.RemoveFromClassList("highPriority");
         }
     }
     
+    #endregion
 }

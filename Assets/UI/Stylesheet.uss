@@ -60,7 +60,7 @@
     /*background-color: blue;*/
 }
 
-.singleRequestContainer{
+.requestCard{
     width: 96%;
     height: 200px;
     background-color: rgb(245,245,220);
@@ -74,7 +74,7 @@
     margin-bottom: 30px;
 }
 
-.singleRequestContainer.highPriority{
+.requestCard.highPriority{
     background-color: rgb(255, 229, 229);
     border-color: rgb(255, 26, 26);
 }

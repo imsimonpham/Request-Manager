@@ -44,73 +44,84 @@ public class ReadGoogleSheet : MonoBehaviour
 
     IEnumerator ObtainSheetData()
     {
-        UnityWebRequest www = UnityWebRequest.Get(_url);
-        yield return www.SendWebRequest();
+        UnityWebRequest webRequest = UnityWebRequest.Get(_url);
+        yield return webRequest.SendWebRequest();
 
-        if (www.result == UnityWebRequest.Result.Success)
+        if (webRequest.result == UnityWebRequest.Result.Success)
+            ProcessData(webRequest.downloadHandler.text);
+        else
+            Debug.LogError("Error: " + webRequest.error);
+    }
+    
+
+    void ProcessData(string json)
+    {
+        var obj = JSON.Parse(json);
+        var arr = obj["values"].AsArray;
+        for (int i = 0; i < arr.Count; i++)
         {
-            string json = www.downloadHandler.text;
-            var obj = JSON.Parse(json);
-
-            if (obj["values"].IsArray)
+            var item = arr[i];
+            if (i > 0 && item[9] == "Sent")
             {
-                var arr = obj["values"].AsArray;
-                for (int i = 0; i < arr.Count; i++)
-                {
-                    var item = arr[i];
-                    if (i > 0 && item[9] == "Sent")
-                    {
-                        Request request = new Request();
-                        request.id = item[0];
-                        request.timeReceived = item[1];
-                        request.area = item[2];
-                        request.guestName = item[3];
-                        request.details = item[4];
-                        request.type = item[5];
-                        request.receiver = item[6];
-                        request.priority = item[7];
-                        request.submitter = item[8];
-                        request.isSent = item[9];
-                        request.status = item[10];
-                        request.resolutionDetails = "";
-                        request.timeCompleted = "";
-                        request.handler = "";
-
-                        if (!_requestDict.ContainsKey(request.id)) 
-                        {
-                            _requestList.Add(request); //debug
-                            //add a new request
-                            _requestDict.Add(request.id, request); 
-                        }
-                        else 
-                        {
-                            //update request
-                            _requestDict[request.id] = request;
-                            //debug
-                            var existingRequest = _requestList.Find(r => r.id == request.id);
-                            if(existingRequest != null)
-                            {
-                                int index = _requestList.IndexOf(existingRequest);
-                                _requestList[index] = request;
-                            }
-                        }
-
-                        if (!_requestUIDict.ContainsKey(request.id))
-                        {
-                            VisualElement requestUI = _requestkListUI.CreateSingleRequest(request.timeReceived, request.area, request.details, request.priority);
-                            _requestUIDict.Add(request.id, requestUI);
-                        }
-                        else
-                        {
-                            _requestkListUI.UpdateSingleRequest(_requestUIDict[request.id], request.area, request.details, request.priority);
-                        }
-                    }
-                }
+                Request request = CreateRequest(item);
+                UpsertRequestData(request);
+                UpsertRequestCard(request);
             }
+        }
+    }
+
+    Request CreateRequest(JSONNode item)
+    {
+        Request request = new Request
+        {
+            id = item[0],
+            timeReceived = item[1],
+            area = item[2],
+            guestName = item[3],
+            details = item[4],
+            type = item[5],
+            receiver = item[6],
+            priority = item[7],
+            submitter = item[8],
+            isSent = item[9],
+            status = item[10],
+            resolutionDetails = "",
+            timeCompleted = "",
+            handler = ""
+        };
+        return request;
+    }
+
+    void UpsertRequestData(Request request)
+    {
+        if (!_requestDict.ContainsKey(request.id)) 
+        {
+            _requestList.Add(request); //debug
+            _requestDict.Add(request.id, request); 
+        }
+        else 
+        {
+            _requestDict[request.id] = request;
+            //debug
+            var existingRequest = _requestList.Find(r => r.id == request.id);
+            if(existingRequest != null)
+            {
+                int index = _requestList.IndexOf(existingRequest);
+                _requestList[index] = request;
+            }
+        }
+    }
+    
+    void UpsertRequestCard(Request request)
+    {
+        if (!_requestUIDict.ContainsKey(request.id))
+        {
+            VisualElement requestCard = _requestkListUI.CreateRequestCard(request.timeReceived, request.area, request.details, request.priority);
+            _requestUIDict.Add(request.id, requestCard);
         }
         else
         {
-            Debug.LogError("Error: " + www.error);
+            _requestkListUI.UpdateRequestCard(_requestUIDict[request.id], request.area, request.details, request.priority);
         }
     }
 }
