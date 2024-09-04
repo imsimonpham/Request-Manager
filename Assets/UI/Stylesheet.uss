@@ -1,28 +1,49 @@
+/* Variables */
+:root{
+    /* Colors */
+    --color-base: white;
+    --color-highPriorityText: rgb(255, 36, 0);
+    --color-highPriority: rgb(253,224,224);
+    --color-mediumPriority:  rgb(255,191,0);
+    --color-requestCard: rgb(245,245,220);
+    --color-inputField: rgba(0, 0, 0, 0.2);
+    --color-border: rgba(0, 0, 0, 0.2);
+    --color-dragger:  rgb(115, 115, 115);
+    --color-textBase: black;
+    --color-btn-medPriority: rgba(255,191,0, 0.8);
+    
+    /* Font size */
+    --fontSize-xxl: 60px;
+    --fontSize-xl: 40px;
+    --fontSize-lg: 30px;
+    --fontSize-md: 25px
+}
+
+
 /* General classes */
 .h1{
-    color: black;
-    font-size: 60px;
-    -unity-text-align: upper-center;
+    color: var(--color-textBase);
+    font-size: var(--fontSize-xxl);
     -unity-font-style: bold;
     padding-bottom: 30px;
 } 
 
 .h2{
-    color: black;
-    font-size: 40px;
+    color: var(--color-textBase);
+    font-size: var(--fontSize-xl);
     -unity-font-style: bold;
     padding-bottom: 40px;
 }
 
 .h3{
-    color: black;
-    font-size: 30px;
+    color: var(--color-textBase);
+    font-size: var(--fontSize-lg);
     -unity-font-style: bold;
 }
 
 .h4{
-    color: black;
-    font-size: 25px;
+    color: var(--color-textBase);
+    font-size: var(--fontSize-md);
 }
 
 /* Utility classes */
@@ -35,18 +56,26 @@
 }
 
 .red{
-    color: red;
+    color: var(--color-highPriorityText);
     -unity-font-style: bold;
 }
 
 .yellow{
-    color: #FFBF00;
+    color: var(--color-mediumPriority);
     -unity-font-style: bold;
+}
+
+.center{
+    -unity-text-align: upper-center;
+}
+
+.margin_bottom_lg{
+    margin-bottom: 40px
 }
 
 /* Specific classes */
 .container{
-    background-color: white;
+    background-color: var(--color-base);
     width: 100%;
     height: 100%;
     padding: 30px;
@@ -56,16 +85,16 @@
     margin-top: 20px;
 }
 
-.taskContainer{
+.requestContainer{
     /*background-color: blue;*/
 }
 
 .requestCard{
     width: 96%;
     height: 200px;
-    background-color: rgb(245,245,220);
+    background-color: var(--color-requestCard);
+    border-color: var(--color-border);
     border-width: 2px;
-    border-color: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     padding: 10px 15px;
     display: flex;
@@ -75,14 +104,80 @@
 }
 
 .requestCard.highPriority{
-    background-color: rgb(255, 229, 229);
-    border-color: rgb(255, 26, 26);
+    background-color: var(--color-highPriority);
+    border-color: var(--color-border);
 }
 
 .bottomContainer{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+/* Modal */
+
+.modalContainer{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    /*top: 0;*/
+    top: 100%;
+    transition-property: top;
+    transition-duration: 0.5s;
+}
+
+.modal{
+    width: 100%;
+    height: 70%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-radius: 20px;
+    background-color: var(--color-requestCard);
+    border-top-color: var(--color-border);
+    border-top-width: 2px;
+    padding: 30px;
+}
+
+.modalContainer.shownModal{
+   top: 0;
+}
+
+.modal.shownModal.highPriority
+{
+    background-color: var(--color-highPriority);
+    border-top-color: var(--color-border);
+}
+
+.closeBtn{
+    --unity-image: url("../Images/closeBtn.png");
+    align-self: flex-end; 
+}
+
+.textField{
+    width: 200px;
+}
+
+.textField .unity-base-text-field__input{
+    height: 50px;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: var(--color-inputField);
+    background-color: var(--color-base);
+    font-size: var(--fontSize-md);
+}
+
+.btn{
+    width: 350px;
+    align-self: center;
+    height: 80px;
+    font-size: var(--fontSize-md);
+    -unity-font-style: bold;
+    border-radius: 5px;
+    border-width: 0px;
+    background-color: var(--color-btn-medPriority);
+    padding: 5px 10px;
 }
 
 /* scroll bar*/
@@ -99,6 +194,6 @@
 }
 
 .unity-base-slider__dragger{
-    background-color: rgb(115, 115, 115);
+    background-color: var(--color-dragger);
     border-radius: 8px;
 }
