@@ -19,7 +19,8 @@ public class ReadGoogleSheet : MonoBehaviour
     private string _url;
 
     [Header("UI")] 
-    [SerializeField] private RequestListUI _requestkListUI;
+    [SerializeField] private RequestUI _requestUI;
+    [SerializeField] private RequestCard _requestCard;
     private Dictionary<string, VisualElement> _requestUIDict = new Dictionary<string, VisualElement>();
     
     [Header("Request Data")] 
@@ -28,7 +29,8 @@ public class ReadGoogleSheet : MonoBehaviour
 
     private void Awake()
     {
-        _requestkListUI.GenerateTaskList();
+        Application.targetFrameRate = 60;
+        _requestUI.GenerateTaskList();
     }
 
     private void Start()
@@ -53,7 +55,6 @@ public class ReadGoogleSheet : MonoBehaviour
             Debug.LogError("Error: " + webRequest.error);
     }
     
-
     void ProcessData(string json)
     {
         var obj = JSON.Parse(json);
@@ -116,12 +117,12 @@ public class ReadGoogleSheet : MonoBehaviour
     {
         if (!_requestUIDict.ContainsKey(request.id))
         {
-            VisualElement requestCard = _requestkListUI.CreateRequestCard(request.timeReceived, request.area, request.details, request.priority);
+            VisualElement requestCard = _requestCard.GenerateRequestCard(request);
             _requestUIDict.Add(request.id, requestCard);
         }
         else
         {
-            _requestkListUI.UpdateRequestCard(_requestUIDict[request.id], request.area, request.details, request.priority);
+            _requestCard.UpdateRequestCard(_requestUIDict[request.id], request);
         }
     }
 }

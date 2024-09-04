@@ -11,6 +11,7 @@
     --color-dragger:  rgb(115, 115, 115);
     --color-textBase: black;
     --color-btn-medPriority: rgba(255,191,0, 0.8);
+    --color-btn-highPriority: rgb(248, 131, 121);
     
     /* Font size */
     --fontSize-xxl: 60px;
@@ -46,6 +47,16 @@
     font-size: var(--fontSize-md);
 }
 
+.h4.highPriority{
+    color: var(--color-highPriorityText);
+    -unity-font-style: bold;
+}
+
+.h4.medPriority{
+    color: var(--color-mediumPriority);
+    -unity-font-style: bold;
+}
+
 /* Utility classes */
 .wrappedText{
     white-space: normal;
@@ -55,17 +66,7 @@
     color: grey;
 }
 
-.red{
-    color: var(--color-highPriorityText);
-    -unity-font-style: bold;
-}
-
-.yellow{
-    color: var(--color-mediumPriority);
-    -unity-font-style: bold;
-}
-
-.center{
+.upperCenter{
     -unity-text-align: upper-center;
 }
 
@@ -87,6 +88,7 @@
 
 .requestContainer{
     /*background-color: blue;*/
+    /*min-height: 100%;*/
 }
 
 .requestCard{
@@ -144,7 +146,7 @@
    top: 0;
 }
 
-.modal.shownModal.highPriority
+.modal.highPriority
 {
     background-color: var(--color-highPriority);
     border-top-color: var(--color-border);
@@ -157,6 +159,7 @@
 
 .textField{
     width: 200px;
+    margin-left: 0;
 }
 
 .textField .unity-base-text-field__input{
@@ -166,6 +169,7 @@
     border-color: var(--color-inputField);
     background-color: var(--color-base);
     font-size: var(--fontSize-md);
+    margin-left: 0;
 }
 
 .btn{
@@ -178,6 +182,10 @@
     border-width: 0px;
     background-color: var(--color-btn-medPriority);
     padding: 5px 10px;
+}
+
+.btn.highPriority{
+    background-color: var(--color-btn-highPriority);
 }
 
 /* scroll bar*/
