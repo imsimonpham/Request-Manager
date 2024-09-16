@@ -1,6 +1,4 @@
 using UnityEngine;
-
-
 [System.Serializable]
 public class Request
 {
@@ -13,7 +11,6 @@ public class Request
     public string receiver;
     public string priority;
     public string submitter;
-    public string isSent;
     public string status;
     public string resolutionDetails;
     public string timeCompleted;

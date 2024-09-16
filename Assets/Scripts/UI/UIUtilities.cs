@@ -1,8 +1,16 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class UIUtilities : MonoBehaviour
 {
+
+    public string GetToday()
+    {
+        DateTime today = DateTime.Now;
+        string formattedDate = today.ToString("MMMM dd, yyyy");
+        return formattedDate;
+    }
     
     public void UpdateLabel(Label label, string text, string labelName)
     {
@@ -10,10 +18,15 @@ public class UIUtilities : MonoBehaviour
         label.name = labelName;
     }
 
-    public T CreateAndAddToParent<T>(string className, VisualElement parent) where T : VisualElement, new()
+    public T CreateAndAddToParent<T>(string classNames, VisualElement parent) where T : VisualElement, new()
     {
         var el = new T();
-        el.AddToClassList(className);
+        var classList = classNames.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var className in classList)
+        {
+            el.AddToClassList(className);
+        }
         parent.Add(el);
         return el;
     }

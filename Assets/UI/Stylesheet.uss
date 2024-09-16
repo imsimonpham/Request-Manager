@@ -2,6 +2,7 @@
 :root{
     /* Colors */
     --color-base: white;
+    --color-base_2: rgba(0,0,0,0.2);
     --color-highPriorityText: rgb(255, 36, 0);
     --color-highPriority: rgb(253,224,224);
     --color-mediumPriority:  rgb(255,191,0);
@@ -12,14 +13,14 @@
     --color-textBase: black;
     --color-btn-medPriority: rgba(255,191,0, 0.8);
     --color-btn-highPriority: rgb(248, 131, 121);
+    --color-iconActive: rgba(0,0,0,0.35);
     
     /* Font size */
     --fontSize-xxl: 60px;
-    --fontSize-xl: 40px;
-    --fontSize-lg: 30px;
-    --fontSize-md: 25px
+    --fontSize-xl: 50px;
+    --fontSize-lg: 40px;
+    --fontSize-md: 30px
 }
-
 
 /* General classes */
 .h1{
@@ -83,10 +84,13 @@
 }
 
 .title{
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
-.requestContainer{
+.tab.hide{
+    display: none;
+}
+.cardContainer{
     /*background-color: blue;*/
     /*min-height: 100%;*/
 }
@@ -187,6 +191,42 @@
 .btn.highPriority{
     background-color: var(--color-btn-highPriority);
 }
+
+/* bottom menu */
+.bottomMenu{
+    background-color: var(--color-base_2);
+    width: 100%;
+    height: 180px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 30px;
+}
+
+.bottomIcon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 104px;
+    border-radius: 10px;
+}
+
+.bottomIcon.active{
+    background-color: var(--color-iconActive);
+}
+
+.pendingTask{
+    --unity-image: url("../Images/pendingTasks.png");
+}
+
+.archive{
+    --unity-image: url("../Images/archiveList.png");
+}
+
+.notes{
+    --unity-image: url("../Images/notes.png");
+}
+
 
 /* scroll bar*/
 .unity-scroller__low-button{

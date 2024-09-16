@@ -17,7 +17,8 @@ public class ReadGoogleSheet : MonoBehaviour
     private string _apiKey = "AIzaSyCCzE8MUPDIQPFovwiYAgmaZBtA5Y1_lHs";
     private string _sheetId = "16ZNq8X-tG6_l7dOviIyPOnpbjfgaqsFocbO5aRvzLPo";
     private string _url;
-
+    [SerializeField] private int _apiCallCount;
+ 
     [Header("UI")] 
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private RequestCard _requestCard;
@@ -30,7 +31,7 @@ public class ReadGoogleSheet : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        _requestUI.GenerateTaskList();
+        _requestUI.GenerateUI();
     }
 
     private void Start()
@@ -53,6 +54,8 @@ public class ReadGoogleSheet : MonoBehaviour
             ProcessData(webRequest.downloadHandler.text);
         else
             Debug.LogError("Error: " + webRequest.error);
+        
+        _apiCallCount++;
     }
     
     void ProcessData(string json)
@@ -62,7 +65,7 @@ public class ReadGoogleSheet : MonoBehaviour
         for (int i = 0; i < arr.Count; i++)
         {
             var item = arr[i];
-            if (i > 0 && item[9] == "Sent")
+            if (i > 0 && item[9] == "On-going")
             {
                 Request request = CreateRequest(item);
                 UpsertRequestData(request);
@@ -84,8 +87,7 @@ public class ReadGoogleSheet : MonoBehaviour
             receiver = item[6],
             priority = item[7],
             submitter = item[8],
-            isSent = item[9],
-            status = item[10],
+            status = item[9],
             resolutionDetails = "",
             timeCompleted = "",
             handler = ""

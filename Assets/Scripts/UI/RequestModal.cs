@@ -29,42 +29,35 @@ public class RequestModal : MonoBehaviour
         closeBtn.RegisterCallback<ClickEvent>(evt => HideModal(evt));
         
         //modal title
-        var modalTitle = _uiUtilities.CreateAndAddToParent<Label>("h2", _modal);
-        modalTitle.AddToClassList("upperCenter");
+        var modalTitle = _uiUtilities.CreateAndAddToParent<Label>("h2 upperCenter", _modal);
         _uiUtilities.UpdateLabel(modalTitle, "Request Details", "modalTitle");
-        
         
         //request details
         var timeTitle = _uiUtilities.CreateAndAddToParent<Label>("h3", _modal);
         _uiUtilities.UpdateLabel(timeTitle, "Time received:", "timeTitle");
-        _timeText = _uiUtilities.CreateAndAddToParent<Label>("h4", _modal);
-        _timeText.AddToClassList("margin_bottom_lg");
+        _timeText = _uiUtilities.CreateAndAddToParent<Label>("h4 margin_bottom_lg", _modal);
         _uiUtilities.UpdateLabel(_timeText, "", "timeReceived");
         
         var areaTitle = _uiUtilities.CreateAndAddToParent<Label>("h3", _modal);
         _uiUtilities.UpdateLabel(areaTitle, "Area/Room:", "areaTitle"); 
-        _areaText = _uiUtilities.CreateAndAddToParent<Label>("h4", _modal);
-        _areaText.AddToClassList("margin_bottom_lg");
+        _areaText = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_lg", _modal);
         _uiUtilities.UpdateLabel(_areaText, "", "area");
         
         var requestTitle = _uiUtilities.CreateAndAddToParent<Label>("h3", _modal);
         _uiUtilities.UpdateLabel(requestTitle, "Request details:", "requestTitle");
-        _request = _uiUtilities.CreateAndAddToParent<Label>("h4", _modal);
-        _request.AddToClassList("margin_bottom_lg");
+        _request = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_lg", _modal);
         _uiUtilities.UpdateLabel(_request,"", "request");
         
         var priorityTitle = _uiUtilities.CreateAndAddToParent<Label>("h3", _modal);
         _uiUtilities.UpdateLabel(priorityTitle, "Priority:", "timeTitle");
-        _priority = _uiUtilities.CreateAndAddToParent<Label>("h4", _modal);
-        _priority.AddToClassList("margin_bottom_lg");
+        _priority = _uiUtilities.CreateAndAddToParent<Label>("h4 margin_bottom_lg", _modal);
         _uiUtilities.UpdateLabel(_priority, "", "timeReceived");
         
         //initial input
         var initialTitle = _uiUtilities.CreateAndAddToParent<Label>("h3", _modal);
         _uiUtilities.UpdateLabel(initialTitle, "Employee's initial:", "initialTitle"); 
-        _initialInput = _uiUtilities.CreateAndAddToParent<TextField>("textField", _modal);
-        _initialInput.AddToClassList("margin_bottom_lg");
-        _initialInput.maxLength = 10;
+        _initialInput = _uiUtilities.CreateAndAddToParent<TextField>("textField margin_bottom_lg", _modal);
+        _initialInput.maxLength = 5;
         _initial = _initialInput.text;
         
         //completion button
@@ -110,12 +103,17 @@ public class RequestModal : MonoBehaviour
 
     private void GenerateModalContent(Request request)
     {
-        _timeText.text = request.timeReceived;
+        _timeText.text = request.timeReceived.Substring(1, request.timeReceived.Length -2);
         _timeText.AddToClassList("grey");
+        
         _areaText.text = request.area;
         _areaText.AddToClassList("grey");
+        _uiUtilities.TrimText(_areaText, 80);
+        
         _request.text = request.details;
+        _uiUtilities.TrimText(_request, 180);
         _request.AddToClassList("grey");
+        
         _priority.text = request.priority;
 
         if (request.priority == "High")
