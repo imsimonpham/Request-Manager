@@ -50,10 +50,6 @@ public class RequestUI : MonoBehaviour
         var title = _uiUtilities.CreateAndAddToParent<Label>("h1 upperCenter title", _container);
         _uiUtilities.UpdateLabel(title, _uiUtilities.GetToday(), "title");
         
-        //tab title
-        /*var tabTitle = _uiUtilities.CreateAndAddToParent<Label>("h2", _container);
-        _uiUtilities.UpdateLabel(tabTitle, _tabTitleText, "tabTitle");*/
-        
         _pendingRequestsComponent.GeneratePendingRequestsTab();
         _archivedRequestsComponent.GenerateArchivedRequestsTab();
         _notesComponent.GenerateNotesTab();
@@ -73,7 +69,7 @@ public class RequestUI : MonoBehaviour
         var archiveIcon = _uiUtilities.CreateAndAddToParent<Image>("archive", iconContainer_2);
         var notesIcon = _uiUtilities.CreateAndAddToParent<Image>("notes", iconContainer_3);
         
-        GenerateActiveTab(pendingTasksIcon);
+        GenerateActiveTab(archiveIcon);
         pendingTasksIcon.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(pendingTasksIcon));
         archiveIcon.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(archiveIcon));
         notesIcon.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(notesIcon));
@@ -92,7 +88,8 @@ public class RequestUI : MonoBehaviour
             _pendingRequestsComponent.GetPendingRequestsTab().AddToClassList("hide");
             _archivedRequestsComponent.GetArchiveRequestsTab().RemoveFromClassList("hide");
             _notesComponent.GetNotesTab().AddToClassList("hide");
-        }else if (icon.Q<VisualElement>(className: "notes") != null)
+        }
+        else if (icon.Q<VisualElement>(className: "notes") != null)
         {
             _pendingRequestsComponent.GetPendingRequestsTab().AddToClassList("hide");
             _archivedRequestsComponent.GetArchiveRequestsTab().AddToClassList("hide"); 

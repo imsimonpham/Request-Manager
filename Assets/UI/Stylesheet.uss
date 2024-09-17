@@ -2,17 +2,18 @@
 :root{
     /* Colors */
     --color-base: white;
-    --color-base_2: rgba(0,0,0,0.2);
-    --color-highPriorityText: rgb(255, 36, 0);
-    --color-highPriority: rgb(253,224,224);
-    --color-mediumPriority:  rgb(255,191,0);
-    --color-requestCard: rgb(245,245,220);
+    --color-base_1: rgba(215, 215, 215, 0.3);
+    --color-highPriority-bg: #003344;
+    --color-mediumPriority-bg:  #004961;
+    --color-bottomMenu: #1A5B71;
+    --color-requestCard-completed: #037CA1;
+    --color-requestCard-aborted: #11100F;
     --color-inputField: rgba(0, 0, 0, 0.2);
     --color-border: rgba(0, 0, 0, 0.2);
     --color-dragger:  rgb(115, 115, 115);
     --color-textBase: black;
-    --color-btn-medPriority: rgba(255,191,0, 0.8);
-    --color-btn-highPriority: rgb(248, 131, 121);
+    --color-textBase_1: rgba(215, 215, 215, 0.7);
+    --color-btn: #D5E14D;
     --color-iconActive: rgba(0,0,0,0.35);
     
     /* Font size */
@@ -24,38 +25,28 @@
 
 /* General classes */
 .h1{
-    color: var(--color-textBase);
+    color: var(--color-textBase_1);
     font-size: var(--fontSize-xxl);
     -unity-font-style: bold;
     padding-bottom: 30px;
 } 
 
 .h2{
-    color: var(--color-textBase);
+    color: var(--color-textBase_1);
     font-size: var(--fontSize-xl);
     -unity-font-style: bold;
     padding-bottom: 40px;
 }
 
 .h3{
-    color: var(--color-textBase);
+    color: var(--color-textBase_1);
     font-size: var(--fontSize-lg);
     -unity-font-style: bold;
 }
 
 .h4{
-    color: var(--color-textBase);
+    color: var(--color-textBase_1);
     font-size: var(--fontSize-md);
-}
-
-.h4.highPriority{
-    color: var(--color-highPriorityText);
-    -unity-font-style: bold;
-}
-
-.h4.medPriority{
-    color: var(--color-mediumPriority);
-    -unity-font-style: bold;
 }
 
 /* Utility classes */
@@ -64,20 +55,38 @@
 }
 
 .grey{
-    color: grey;
+    color: var(--color-base_1);
 }
 
 .upperCenter{
     -unity-text-align: upper-center;
 }
 
+.margin_top_sm{
+    margin-bottom: 15px;
+}
+
+.margin_bottom_sm{
+    margin-bottom: 15px;
+}
+
+.margin_bottom_md{
+    margin-bottom: 25px;
+}
+
 .margin_bottom_lg{
-    margin-bottom: 40px
+    margin-bottom: 35px;
+}
+
+.bold{
+    -unity-font-style: bold;
 }
 
 /* Specific classes */
 .container{
-    background-color: var(--color-base);
+    background-image: url("../Images/king.png");
+    background-size: cover;
+    background-position: center;
     width: 100%;
     height: 100%;
     padding: 30px;
@@ -98,7 +107,7 @@
 .requestCard{
     width: 96%;
     height: 200px;
-    background-color: var(--color-requestCard);
+    background-color: var(--color-mediumPriority-bg);
     border-color: var(--color-border);
     border-width: 2px;
     border-radius: 20px;
@@ -109,8 +118,12 @@
     margin-bottom: 30px;
 }
 
+.requestCard.complete{
+    background-color: var(--color-requestCard-completed);
+}
+
 .requestCard.highPriority{
-    background-color: var(--color-highPriority);
+    background-color: var(--color-highPriority-bg);
     border-color: var(--color-border);
 }
 
@@ -126,43 +139,40 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    left: 0;
-    /*top: 0;*/
-    top: 100%;
-    transition-property: top;
+    left: 100%;
+    bottom: 0;
+    transition-property: left;
     transition-duration: 0.5s;
 }
 
 .modal{
     width: 100%;
-    height: 70%;
+    height: 100%;
     position: absolute;
     left: 0;
     bottom: 0;
     border-radius: 20px;
-    background-color: var(--color-requestCard);
-    border-top-color: var(--color-border);
+    background-color: var(--color-mediumPriority-bg);
     border-top-width: 2px;
     padding: 30px;
 }
 
 .modalContainer.shownModal{
-   top: 0;
+   left: 0;
 }
 
 .modal.highPriority
 {
-    background-color: var(--color-highPriority);
-    border-top-color: var(--color-border);
+    background-color: var(--color-highPriority-bg);
 }
 
 .closeBtn{
-    --unity-image: url("../Images/closeBtn.png");
-    align-self: flex-end; 
+    --unity-image: url("../Images/back.png");
+    align-self: flex-start; 
 }
 
 .textField{
-    width: 200px;
+    width: 100%;
     margin-left: 0;
 }
 
@@ -184,17 +194,13 @@
     -unity-font-style: bold;
     border-radius: 5px;
     border-width: 0px;
-    background-color: var(--color-btn-medPriority);
+    background-color: var(--color-btn);
     padding: 5px 10px;
-}
-
-.btn.highPriority{
-    background-color: var(--color-btn-highPriority);
 }
 
 /* bottom menu */
 .bottomMenu{
-    background-color: var(--color-base_2);
+    background-color: var(--color-bottomMenu);
     width: 100%;
     height: 180px;
     display: flex;

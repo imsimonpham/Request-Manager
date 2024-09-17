@@ -5,18 +5,20 @@ public class RequestCard : MonoBehaviour
 {
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private PendingRequestsTab _pendingRequestTab;
+    [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
     [SerializeField] private RequestModal _requestModal;
     [SerializeField] private UIUtilities _uiUtilities;
     
     public VisualElement GenerateRequestCard(Request request)
     {
         //request container
-        var requestCard = _uiUtilities.CreateAndAddToParent<VisualElement>("requestCard", _pendingRequestTab.GetCardContainer());
+        var requestCardClasses = request.priority == "High" ? "requestCard highPriority" : "requestCard";
+        var requestCard = _uiUtilities.CreateAndAddToParent<VisualElement>(requestCardClasses, _pendingRequestTab.GetCardContainer());
         
         //area text
-        var areaText = _uiUtilities.CreateAndAddToParent<Label>("h3", requestCard);
+        var areaText = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", requestCard);
         _uiUtilities.UpdateLabel(areaText, request.area, "area");
-        _uiUtilities.TrimText(areaText, 25);
+        _uiUtilities.TrimText(areaText, 35);
         
         //request text
         var requestText = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText", requestCard);
@@ -26,21 +28,48 @@ public class RequestCard : MonoBehaviour
         //time text + priority tex
         var bottomContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomContainer", requestCard);
         
-        var timeText = _uiUtilities.CreateAndAddToParent<Label>("h4 grey", bottomContainer);
-        _uiUtilities.UpdateLabel(timeText, request.timeReceived.Substring(1, request.timeReceived.Length -2), "timeReceived");
+        var timeReceived = _uiUtilities.CreateAndAddToParent<Label>("h4 grey", bottomContainer);
+        _uiUtilities.UpdateLabel(timeReceived, request.timeReceived.Substring(1, request.timeReceived.Length -2), "timeReceived");
         
-        var priorityText = _uiUtilities.CreateAndAddToParent<Label>("h4", bottomContainer);
-        _uiUtilities.UpdateLabel(priorityText, request.priority + " priority", "priority");
-        _uiUtilities.SetLabelPriority(priorityText, request.priority);
+        var priorityText = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", bottomContainer);
+        var priority = request.priority == "High" ? "High priority" : "";
+        _uiUtilities.UpdateLabel(priorityText, priority, "priority");
         
         return requestCard;
+    }
+    
+    public VisualElement GenerateArchivedRequestCard(Request request)
+    {
+        //request container
+        var archivedRequestCard = _uiUtilities.CreateAndAddToParent<VisualElement>("requestCard complete", _archivedRequestsTab.GetCardContainer());
+        
+        //area text
+        var areaText = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", archivedRequestCard);
+        _uiUtilities.UpdateLabel(areaText, request.area, "area");
+        _uiUtilities.TrimText(areaText, 35);
+        
+        //request text
+        var requestText = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText", archivedRequestCard);
+        _uiUtilities.UpdateLabel(requestText, request.details, "request");
+        _uiUtilities.TrimText(requestText, 40);
+            
+        //time text + priority tex
+        var bottomContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomContainer", archivedRequestCard);
+        
+        var timeReceived = _uiUtilities.CreateAndAddToParent<Label>("h4 grey", bottomContainer);
+        _uiUtilities.UpdateLabel(timeReceived, request.timeReceived.Substring(1, request.timeReceived.Length -2), "timeReceived");
+        
+        var timeCompleted = _uiUtilities.CreateAndAddToParent<Label>("h4 grey", bottomContainer);
+        _uiUtilities.UpdateLabel(timeCompleted, request.timeCompleted, "timeCompleted");
+        
+        return archivedRequestCard;
     }
 
     public void UpdateRequestCard(VisualElement requestCard, Request request)
     {
         var areaText = requestCard.Q<Label>(name: "area"); 
         if (areaText != null)
-            _uiUtilities.UpdateAndTrimText(areaText, 25, request.area);
+            _uiUtilities.UpdateAndTrimText(areaText, 35, request.area);
         
         var requestText = requestCard.Q<Label>(name: "request");
         if (requestText != null)
@@ -49,6 +78,7 @@ public class RequestCard : MonoBehaviour
         var priorityText = requestCard.Q<Label>(name: "priority");
         if (priorityText != null)
             _uiUtilities.UpdateLabelPriority(priorityText, request.priority);
+            
         
         requestCard.RegisterCallback<ClickEvent>(evt => _requestModal.ShowModal(evt, request));
     }

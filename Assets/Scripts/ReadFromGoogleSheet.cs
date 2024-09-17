@@ -1,5 +1,3 @@
-using System;
-using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
@@ -7,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UIElements;
 
-public class ReadGoogleSheet : MonoBehaviour
+public class ReadFromGoogleSheet : MonoBehaviour
 {
     [Header("API")]
     private string _baseURL = "https://sheets.googleapis.com/v4/spreadsheets/";
@@ -37,15 +35,15 @@ public class ReadGoogleSheet : MonoBehaviour
     private void Start()
     {
         _url = _baseURL + _sheetId + _property + _tabName + _keyString + _apiKey;
-        InvokeRepeating("ObtainSheetDataRoutine", 0f, 1f);
+        InvokeRepeating("ObtainSheetData", 0f, 1f);
     }
 
-    void ObtainSheetDataRoutine()
+    void ObtainSheetData()
     {
-        StartCoroutine(ObtainSheetData());
+        StartCoroutine(ObtainSheetDataRoutine());
     }
 
-    IEnumerator ObtainSheetData()
+    IEnumerator ObtainSheetDataRoutine()
     {
         UnityWebRequest webRequest = UnityWebRequest.Get(_url);
         yield return webRequest.SendWebRequest();
@@ -88,7 +86,7 @@ public class ReadGoogleSheet : MonoBehaviour
             priority = item[7],
             submitter = item[8],
             status = item[9],
-            resolutionDetails = "",
+            resolution = "",
             timeCompleted = "",
             handler = ""
         };
@@ -119,8 +117,8 @@ public class ReadGoogleSheet : MonoBehaviour
     {
         if (!_requestUIDict.ContainsKey(request.id))
         {
-            VisualElement requestCard = _requestCard.GenerateRequestCard(request);
-            _requestUIDict.Add(request.id, requestCard);
+            VisualElement card = _requestCard.GenerateRequestCard(request);
+            _requestUIDict.Add(request.id, card);
         }
         else
         {

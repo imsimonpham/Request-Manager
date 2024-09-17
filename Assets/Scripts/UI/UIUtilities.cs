@@ -48,28 +48,27 @@ public class UIUtilities : MonoBehaviour
     {
         if (priorityData == "High")
         {
-            priorityText.parent.parent.AddToClassList("highPriority");
-            priorityText.AddToClassList("highPriority");
+            /*priorityText.parent.parent.AddToClassList("highPriority");*/
+            /*priorityText.AddToClassList("highPriority");*/
         }
         else
         {
-            priorityText.parent.parent.RemoveFromClassList("highPriority");
-            priorityText.AddToClassList("medPriority");
+            /*priorityText.parent.parent.RemoveFromClassList("highPriority");*/
+            /*priorityText.AddToClassList("medPriority");*/
         }
     }
 
     public void UpdateLabelPriority(Label priorityText, string priorityData)
     {
-        priorityText.text = priorityData + " priority";
         if (priorityData == "High")
         {
+            priorityText.text = priorityData + " priority";
             priorityText.AddToClassList("highPriority");
-            priorityText.RemoveFromClassList("medPriority");
             priorityText.parent.parent.AddToClassList("highPriority");
         }
         else
         {
-            priorityText.AddToClassList("medPriority");
+            priorityText.text = "";
             priorityText.RemoveFromClassList("highPriority");
             priorityText.parent.parent.RemoveFromClassList("highPriority");
         }
