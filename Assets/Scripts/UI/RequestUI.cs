@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 public class RequestUI : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class RequestUI : MonoBehaviour
     [SerializeField] private ArchivedRequestsTab _archivedRequestsComponent;
     [SerializeField] private NotesTab _notesComponent;
     [SerializeField] private RequestModal _requestModal;
+    private VisualElement _pendingTasksIconContainer;
+    private VisualElement _archivedTasksIconContainer;
+    private VisualElement _notesIconContainer;
+    private List<VisualElement> _iconContainerList = new List<VisualElement>();
     private VisualElement _root;
     private VisualElement _container;
     private VisualElement _bottomMenu;
@@ -61,39 +66,58 @@ public class RequestUI : MonoBehaviour
     private void GenerateBottomMenu()
     {
         _bottomMenu = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomMenu", _root);
-        var iconContainer_1 = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
-        var iconContainer_2 = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
-        var iconContainer_3 = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
+        _pendingTasksIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
+        _archivedTasksIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
+        _notesIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
+        _pendingTasksIconContainer.name = "pendingTaskIconContainer";
+        _archivedTasksIconContainer.name = "archivedTasksIconContainer";
+        _notesIconContainer.name = "notesIconContainer";
+        _iconContainerList.Add(_pendingTasksIconContainer);
+        _iconContainerList.Add(_archivedTasksIconContainer);
+        _iconContainerList.Add(_notesIconContainer);
         
-        var pendingTasksIcon = _uiUtilities.CreateAndAddToParent<Image>("pendingTask", iconContainer_1);
-        var archiveIcon = _uiUtilities.CreateAndAddToParent<Image>("archive", iconContainer_2);
-        var notesIcon = _uiUtilities.CreateAndAddToParent<Image>("notes", iconContainer_3);
+        _uiUtilities.CreateAndAddToParent<Image>("pendingTask", _pendingTasksIconContainer);
+        _uiUtilities.CreateAndAddToParent<Image>("archive", _archivedTasksIconContainer);
+        _uiUtilities.CreateAndAddToParent<Image>("notes", _notesIconContainer);
         
-        GenerateActiveTab(archiveIcon);
-        pendingTasksIcon.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(pendingTasksIcon));
-        archiveIcon.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(archiveIcon));
-        notesIcon.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(notesIcon));
+        GenerateActiveTab(_archivedTasksIconContainer);
+        _pendingTasksIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_pendingTasksIconContainer));
+        _archivedTasksIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_archivedTasksIconContainer));
+        _notesIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_notesIconContainer));
     }
 
-    private void GenerateActiveTab(VisualElement icon)
+    private void GenerateActiveTab(VisualElement iconContainer)
     {
-        if (icon.Q<VisualElement>(className: "pendingTask") != null)
+        if (iconContainer.Q<VisualElement>(name: "pendingTaskIconContainer") != null)
         {
             _pendingRequestsComponent.GetPendingRequestsTab().RemoveFromClassList("hide"); // scroll view
             _archivedRequestsComponent.GetArchiveRequestsTab().AddToClassList("hide"); // scroll view
-            _notesComponent.GetNotesTab().AddToClassList("hide"); // scroll view
+            _notesComponent.GetNotesTab().AddToClassList("archivedTasksIconContainer"); // scroll view
+            SetActiveBorder(_pendingTasksIconContainer);
         }
-        else if (icon.Q<VisualElement>(className: "archive") != null)
+        else if (iconContainer.Q<VisualElement>(name: "archivedTasksIconContainer") != null)
         {
             _pendingRequestsComponent.GetPendingRequestsTab().AddToClassList("hide");
             _archivedRequestsComponent.GetArchiveRequestsTab().RemoveFromClassList("hide");
             _notesComponent.GetNotesTab().AddToClassList("hide");
+            SetActiveBorder(_archivedTasksIconContainer);
         }
-        else if (icon.Q<VisualElement>(className: "notes") != null)
+        else if (iconContainer.Q<VisualElement>(name: "notesIconContainer") != null)
         {
             _pendingRequestsComponent.GetPendingRequestsTab().AddToClassList("hide");
             _archivedRequestsComponent.GetArchiveRequestsTab().AddToClassList("hide"); 
             _notesComponent.GetNotesTab().RemoveFromClassList("hide");
+            SetActiveBorder(_notesIconContainer);
+        }
+    }
+
+    private void SetActiveBorder(VisualElement iconContainer)
+    {
+        for(var i = 0; i < _iconContainerList.Count; i++)
+        {
+            _iconContainerList[i].RemoveFromClassList("active");
+            if (_iconContainerList[i].name == iconContainer.name)
+                _iconContainerList[i].AddToClassList("active");
         }
     }
     

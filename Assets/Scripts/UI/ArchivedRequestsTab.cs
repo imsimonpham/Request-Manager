@@ -7,7 +7,7 @@ public class ArchivedRequestsTab : MonoBehaviour
     [Header("Request Data")] 
     [SerializeField] private RequestCard _requestCard; //debug
     private Dictionary<string, Request> _archivedRequestDict = new Dictionary<string, Request>();
-    [SerializeField] private List<Request> _archivedRequestList= new List<Request>(); //debu
+    [SerializeField] private List<Request> _archivedRequestList= new List<Request>(); //debug
     
     [Header("UI")] 
     [SerializeField] private RequestUI _requestUI;
@@ -53,11 +53,6 @@ public class ArchivedRequestsTab : MonoBehaviour
             handler = ""
         };
         _requestCard.GenerateArchivedRequestCard(request);*/
-    }
-
-    public void UpdateArchivedRequestData()
-    {
-        
     }
 
     public void AddArchivedRequest(Request request)

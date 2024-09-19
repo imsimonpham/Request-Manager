@@ -8,6 +8,7 @@
     --color-bottomMenu: #1A5B71;
     --color-requestCard-completed: #037CA1;
     --color-requestCard-aborted: #11100F;
+    --color-highlight: #D5E14D;
     --color-inputField: rgba(0, 0, 0, 0.2);
     --color-border: rgba(0, 0, 0, 0.2);
     --color-dragger:  rgb(115, 115, 115);
@@ -202,23 +203,23 @@
 .bottomMenu{
     background-color: var(--color-bottomMenu);
     width: 100%;
-    height: 180px;
+    height: 120px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    padding: 30px;
 }
 
 .bottomIcon{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 104px;
-    border-radius: 10px;
+    width: 120px;
+    height: 100%;
+    border-width: 3px;
 }
 
 .bottomIcon.active{
-    background-color: var(--color-iconActive);
+    border-top-color: var(--color-highlight);
 }
 
 .pendingTask{

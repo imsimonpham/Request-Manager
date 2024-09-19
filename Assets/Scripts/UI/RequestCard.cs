@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,12 +10,14 @@ public class RequestCard : MonoBehaviour
     [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
     [SerializeField] private RequestModal _requestModal;
     [SerializeField] private UIUtilities _uiUtilities;
-    
+
     public VisualElement GenerateRequestCard(Request request)
     {
         //request container
         var requestCardClasses = request.priority == "High" ? "requestCard highPriority" : "requestCard";
         var requestCard = _uiUtilities.CreateAndAddToParent<VisualElement>(requestCardClasses, _pendingRequestTab.GetCardContainer());
+        
+        requestCard.RegisterCallback<ClickEvent>(_ => _requestModal.ShowModal(request));
         
         //area text
         var areaText = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", requestCard);
@@ -78,8 +82,5 @@ public class RequestCard : MonoBehaviour
         var priorityText = requestCard.Q<Label>(name: "priority");
         if (priorityText != null)
             _uiUtilities.UpdateLabelPriority(priorityText, request.priority);
-            
-        
-        requestCard.RegisterCallback<ClickEvent>(evt => _requestModal.ShowModal(evt, request));
     }
 }

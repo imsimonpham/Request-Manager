@@ -4,13 +4,18 @@ using UnityEngine.UIElements;
 
 public class UIUtilities : MonoBehaviour
 {
-
     public string GetToday()
     {
         DateTime today = DateTime.Now;
         string formattedDate = today.ToString("MMMM dd, yyyy");
         return formattedDate;
     }
+    public string GetCurrentTime()
+    {
+        DateTime now = DateTime.Now;
+        return now.ToString("h:mm:ss tt");
+    }
+    
     
     public void UpdateLabel(Label label, string text, string labelName)
     {

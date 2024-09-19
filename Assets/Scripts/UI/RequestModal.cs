@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections;
@@ -10,14 +11,8 @@ public class RequestModal : MonoBehaviour
     [SerializeField] private UIUtilities _uiUtilities;
     [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
     
-    //API
-    private string _baseURL = "https://sheets.googleapis.com/v4/spreadsheets/";
-    private string _property = "/values/";
-    private string _keyString = "?key=";
-    private string _tabName = "Today";
-    private string _apiKey = "AIzaSyCCzE8MUPDIQPFovwiYAgmaZBtA5Y1_lHs";
-    private string _sheetId = "16ZNq8X-tG6_l7dOviIyPOnpbjfgaqsFocbO5aRvzLPo";
-    private string _url;
+    //send data to google from
+    private string _url = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
     
     //modal
     private VisualElement _modalContainer;
@@ -37,12 +32,8 @@ public class RequestModal : MonoBehaviour
     private Label _status;
     private string _resolution;
     private Label _timeCompleted;
+    private Request _currentRequest;
     
-    private void Start()
-    {
-        _url = _baseURL + _sheetId + _property + _tabName + _keyString + _apiKey;
-        /*InvokeRepeating("ObtainSheetDataRoutine", 0f, 1f);*/
-    }
     
     public void GenerateRequestModal()
     {
@@ -51,7 +42,7 @@ public class RequestModal : MonoBehaviour
         
         //close btn
         var closeBtn = _uiUtilities.CreateAndAddToParent<Image>("closeBtn", _modal);
-        closeBtn.RegisterCallback<ClickEvent>(evt => HideModal(evt));
+        closeBtn.RegisterCallback<ClickEvent>(evt => HideModal());
         
         //modal title
         var modalTitle = _uiUtilities.CreateAndAddToParent<Label>("h3 upperCenter margin_bottom_sm margin_top_sm", _modal);
@@ -108,8 +99,9 @@ public class RequestModal : MonoBehaviour
         //completion button
         _completionBtn = _uiUtilities.CreateAndAddToParent<Button>("btn", _modal);
         _completionBtn.text = "Complete Request";
+        _completionBtn.RegisterCallback<ClickEvent>(_ => CompleteRequest(_currentRequest));
         
-        var request = new Request
+        /*var request = new Request
         {
             id = "1",
             timeReceived = "'12:00:00 PM'",
@@ -125,21 +117,22 @@ public class RequestModal : MonoBehaviour
             timeCompleted = "",
             handler = ""
         };
-        GenerateModalContent(request);
+        GenerateModalContent(request);*/
     }
     
     
 
     private void ValidateInitialInput()
     {
-        if(_initialInput.text == "")
+        if (_initialInput.text == "")
             _completionBtn.SetEnabled(false);
         else
             _completionBtn.SetEnabled(true);
     }
 
-    public void ShowModal(ClickEvent evt, Request request)
+    public void ShowModal(Request request)
     {
+        _currentRequest = request;
         _modalContainer.AddToClassList("shownModal");
         _modalPriority = request.priority;
         if (_modalPriority == "High")
@@ -147,27 +140,27 @@ public class RequestModal : MonoBehaviour
         else
             _modal.RemoveFromClassList("highPriority");
         
-        GenerateModalContent(request);
+        GenerateModalContent(_currentRequest);
         InvokeRepeating("ValidateInitialInput", 0, 0.5f);
-        _completionBtn.RegisterCallback<ClickEvent>(evt => CompleteRequest(evt, request));
     }
 
-    private void HideModal(ClickEvent evt)
+    private void HideModal()
     {
         _modalContainer.RemoveFromClassList("shownModal");
         _modal.RemoveFromClassList("shownModal");
         CancelInvoke("ValidateInitialInput");
     }
     
-    private void CompleteRequest(ClickEvent evt, Request request)
+    private void CompleteRequest(Request request)
     {
-        HideModal(evt);
         request.status = "Complete";
-        request.resolution = "";
-        request.timeCompleted = "";
-        request.handler = "";
+        request.resolution = _resolutionInput.text;
+        request.timeCompleted = _uiUtilities.GetCurrentTime();
+        request.handler = _initialInput.text;
         _archivedRequestsTab.AddArchivedRequest(request);
         _archivedRequestsTab.AddArchivedRequestCard(request);
+        UpdateRequestData(request);
+        HideModal();
     }
 
     private void GenerateModalContent(Request request)
@@ -194,7 +187,7 @@ public class RequestModal : MonoBehaviour
         _requester.AddToClassList("grey");
     }
 
-    void UpdateRequestData(Request request)
+    private void UpdateRequestData(Request request)
     {
         StartCoroutine(UpdateSheetDataRoutine(request));
     }
@@ -202,10 +195,11 @@ public class RequestModal : MonoBehaviour
     IEnumerator UpdateSheetDataRoutine(Request request)
     {
         WWWForm form = new WWWForm();
-        form.AddField("status", request.status);
-        form.AddField("resolution", request.resolution);
-        form.AddField("timeComplete", request.timeCompleted);
-        form.AddField("initial", request.handler);
+        form.AddField("entry.715305477", request.id);
+        form.AddField("entry.530669248", request.status);
+        form.AddField("entry.1190988772", request.resolution);
+        form.AddField("entry.196062821", request.timeCompleted);
+        form.AddField("entry.1883248811", request.handler);
 
         using (UnityWebRequest www = UnityWebRequest.Post(_url, form))
         {
