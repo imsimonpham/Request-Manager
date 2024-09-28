@@ -3,10 +3,10 @@
     /* Colors */
     --color-base: white;
     --color-base_1: rgba(215, 215, 215, 0.3);
-    --color-highPriority-bg: #003344;
-    --color-mediumPriority-bg:  #004961;
+    --color-highPriority-bg: #004961; 
+    --color-mediumPriority-bg:  #037CA1; 
     --color-bottomMenu: #1A5B71;
-    --color-requestCard-completed: #037CA1;
+    --color-requestCard-completed: #003344; 
     --color-requestCard-aborted: #11100F;
     --color-highlight: #D5E14D;
     --color-inputField: rgba(0, 0, 0, 0.2);
@@ -119,8 +119,15 @@
     margin-bottom: 30px;
 }
 
-.requestCard.complete{
+.requestCard.hide{
+    display: none;
+}
+
+.requestCard.archived{
     background-color: var(--color-requestCard-completed);
+    flex-direction: row;
+    justify-content: space-between;
+    
 }
 
 .requestCard.highPriority{
@@ -132,6 +139,23 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.requestCard.archived .leftCol{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.requestCard.archived .rightCol{
+    width: 20%;
+    display: flex;
+    justify-content: center;
+}
+
+.restoreBtn{
+    --unity-image: url("../Images/undoBtn.png");
 }
 
 /* Modal */

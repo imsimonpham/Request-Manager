@@ -131,7 +131,6 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420033}
-  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -227,20 +226,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _apiCallCount: 0
   _requestUI: {fileID: 2057400230}
-  _requestCard: {fileID: 2057400232}
+  _requestManager: {fileID: 2057400232}
+  _pendingRequestsTab: {fileID: 2057400234}
+  _archivedRequestsTab: {fileID: 2057400235}
   _requestList: []
---- !u!114 &519420034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03219f16e67f41d4f901cbcc4c679637, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _archivedRequestList: []
 --- !u!1 &531654761
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af56c189a3d73d4b8aabad03d752397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _sheetManager: {fileID: 519420033}
   _requestUI: {fileID: 2057400230}
   _pendingRequestTab: {fileID: 2057400234}
   _archivedRequestsTab: {fileID: 2057400235}
@@ -430,6 +421,8 @@ MonoBehaviour:
   _requestUI: {fileID: 2057400230}
   _uiUtilities: {fileID: 2057400231}
   _archivedRequestsTab: {fileID: 2057400235}
+  _pendingRequestsTab: {fileID: 2057400234}
+  _requestManager: {fileID: 2057400232}
 --- !u!114 &2057400234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,7 +437,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _requestUI: {fileID: 2057400230}
   _uiUtilities: {fileID: 2057400231}
-  _requestCard: {fileID: 2057400232}
+  _requestManager: {fileID: 2057400232}
 --- !u!114 &2057400235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,10 +450,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 150e13b7da8506f49b5e94b63ac9f383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _requestCard: {fileID: 2057400232}
-  _archivedRequestList: []
   _requestUI: {fileID: 2057400230}
   _uiUtilities: {fileID: 2057400231}
+  _requestManager: {fileID: 2057400232}
 --- !u!114 &2057400236
 MonoBehaviour:
   m_ObjectHideFlags: 0

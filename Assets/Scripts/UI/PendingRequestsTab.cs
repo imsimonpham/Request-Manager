@@ -5,7 +5,8 @@ public class PendingRequestsTab : MonoBehaviour
 {
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private UIUtilities _uiUtilities;
-    [SerializeField] private RequestCard _requestCard; //debug
+    [SerializeField] private RequestManager _requestManager;
+
     private VisualElement _pendingRequestsTab;
     private ScrollView _cardContainer;
     private VisualElement _bottomIcon;
@@ -36,18 +37,16 @@ public class PendingRequestsTab : MonoBehaviour
             details = "2 sets of towels",
             type = "Guest Request",
             receiver = "Houseperson",
-            priority = "High",
+            priority = "Medium",
             submitter = "SP",
             status = "On-going",
             resolution = "",
             timeCompleted = "",
             handler = ""
         };
-        _requestCard.GenerateRequestCard(request);*/
+        _requestManager.CreateRequestCard(request);*/
     }
     
-    
-
     public VisualElement GetPendingRequestsTab(){ return _pendingRequestsTab;}
     public VisualElement GetCardContainer(){return _cardContainer;}
 }

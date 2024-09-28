@@ -49,20 +49,6 @@ public class UIUtilities : MonoBehaviour
             label.text = label.text.Substring(0, maxLength) + "...";
     }
 
-    public void SetLabelPriority(Label priorityText, string priorityData)
-    {
-        if (priorityData == "High")
-        {
-            /*priorityText.parent.parent.AddToClassList("highPriority");*/
-            /*priorityText.AddToClassList("highPriority");*/
-        }
-        else
-        {
-            /*priorityText.parent.parent.RemoveFromClassList("highPriority");*/
-            /*priorityText.AddToClassList("medPriority");*/
-        }
-    }
-
     public void UpdateLabelPriority(Label priorityText, string priorityData)
     {
         if (priorityData == "High")

@@ -1,11 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UIElements;
 
-public class ReadFromGoogleSheet : MonoBehaviour
+public class SheetManager : MonoBehaviour
 {
     [Header("API")]
     private string _baseURL = "https://sheets.googleapis.com/v4/spreadsheets/";
@@ -19,12 +19,16 @@ public class ReadFromGoogleSheet : MonoBehaviour
  
     [Header("UI")] 
     [SerializeField] private RequestUI _requestUI;
-    [SerializeField] private RequestCard _requestCard;
-    private Dictionary<string, VisualElement> _requestUIDict = new Dictionary<string, VisualElement>();
+    [SerializeField] private RequestManager _requestManager;
     
     [Header("Request Data")] 
-    [SerializeField] private List<Request> _requestList= new List<Request>(); //for debug purposes
     private Dictionary<string, Request> _requestDict = new Dictionary<string, Request>();
+    private Dictionary<string, Request> _archivedRequestDict = new Dictionary<string, Request>();
+    [SerializeField] private PendingRequestsTab _pendingRequestsTab;
+    [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
+    [SerializeField] private List<Request> _requestList= new List<Request>(); //for debug purposes
+    [SerializeField] private List<Request> _archivedRequestList= new List<Request>(); //debug
+    
 
     private void Awake()
     {
@@ -63,16 +67,15 @@ public class ReadFromGoogleSheet : MonoBehaviour
         for (int i = 0; i < arr.Count; i++)
         {
             var item = arr[i];
-            if (i > 0 && item[9] == "On-going")
+            if (i > 0)
             {
-                Request request = CreateRequest(item);
+                Request request = TransformRequestData (item);
                 UpsertRequestData(request);
-                UpsertRequestCard(request);
             }
         }
     }
 
-    Request CreateRequest(JSONNode item)
+    Request TransformRequestData (JSONNode item)
     {
         Request request = new Request
         {
@@ -95,35 +98,33 @@ public class ReadFromGoogleSheet : MonoBehaviour
 
     void UpsertRequestData(Request request)
     {
-        if (!_requestDict.ContainsKey(request.id)) 
-        {
-            _requestList.Add(request); //debug
-            _requestDict.Add(request.id, request); 
-        }
+        if (!_requestDict.ContainsKey(request.id) && request.status == "On-going")
+            _requestManager.AddRequest(request, _requestDict, _requestList);
         else 
+            HandleExistingRequest(request);
+    }
+
+    private void HandleExistingRequest(Request request)
+    {
+        if (request.status == "Complete")
+        {
+            _requestManager.RemoveRequest(request, _requestDict, _pendingRequestsTab, _requestList);
+            _requestManager.AddArchivedRequest(request, _archivedRequestDict, _archivedRequestList);
+        }
+        else if (request.status == "Aborted")
+        {
+            _requestManager.RemoveRequest(request, _requestDict, _pendingRequestsTab, _requestList);
+        }
+        else if (request.status == "On-going")
         {
             _requestDict[request.id] = request;
-            //debug
-            var existingRequest = _requestList.Find(r => r.id == request.id);
-            if(existingRequest != null)
-            {
-                int index = _requestList.IndexOf(existingRequest);
-                _requestList[index] = request;
-            }
+            _requestManager.UpdateRequestCard(request, _pendingRequestsTab, _requestList);
+            
+            if(_archivedRequestDict.ContainsKey(request.id))
+                _requestManager.RemoveArchivedRequest(request, _archivedRequestDict, _archivedRequestsTab, _archivedRequestList);
         }
     }
-    
-    void UpsertRequestCard(Request request)
-    {
-        if (!_requestUIDict.ContainsKey(request.id))
-        {
-            VisualElement card = _requestCard.GenerateRequestCard(request);
-            _requestUIDict.Add(request.id, card);
-        }
-        else
-        {
-            _requestCard.UpdateRequestCard(_requestUIDict[request.id], request);
-        }
-    }
+
+    public Dictionary<string,Request> GetArchivedRequestDict(){return _archivedRequestDict;}
 }
 

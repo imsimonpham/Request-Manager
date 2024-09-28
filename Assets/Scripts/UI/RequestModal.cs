@@ -1,15 +1,15 @@
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections;
 using UnityEngine.Networking;
-using SimpleJSON;
 
 public class RequestModal : MonoBehaviour
 {
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private UIUtilities _uiUtilities;
     [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
+    [SerializeField] private PendingRequestsTab _pendingRequestsTab;
+    [SerializeField] private RequestManager _requestManager;
     
     //send data to google from
     private string _url = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
@@ -120,8 +120,6 @@ public class RequestModal : MonoBehaviour
         GenerateModalContent(request);*/
     }
     
-    
-
     private void ValidateInitialInput()
     {
         if (_initialInput.text == "")
@@ -157,12 +155,11 @@ public class RequestModal : MonoBehaviour
         request.resolution = _resolutionInput.text;
         request.timeCompleted = _uiUtilities.GetCurrentTime();
         request.handler = _initialInput.text;
-        _archivedRequestsTab.AddArchivedRequest(request);
-        _archivedRequestsTab.AddArchivedRequestCard(request);
-        UpdateRequestData(request);
+        _requestManager.HideRequestCard(request, _pendingRequestsTab.GetCardContainer().Children());
+        StartCoroutine(UpdateSheetDataRoutine(request));
         HideModal();
     }
-
+    
     private void GenerateModalContent(Request request)
     {
         _timeReceived.text = request.timeReceived.Substring(1, request.timeReceived.Length -2);
@@ -185,11 +182,6 @@ public class RequestModal : MonoBehaviour
         
         _requester.text = request.submitter;
         _requester.AddToClassList("grey");
-    }
-
-    private void UpdateRequestData(Request request)
-    {
-        StartCoroutine(UpdateSheetDataRoutine(request));
     }
 
     IEnumerator UpdateSheetDataRoutine(Request request)
