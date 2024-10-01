@@ -122,16 +122,15 @@ public class RequestManager : MonoBehaviour
 
     public void RemoveRequest(Request request, Dictionary<string, Request> requestDict,  PendingRequestsTab pendingRequestsTab,  List<Request> requestList = null)
     {
-        requestDict.Remove(request.id);
         foreach (VisualElement card in pendingRequestsTab.GetCardContainer().Children())
         {
             if (card.name == request.id)
             {
                 pendingRequestsTab.GetCardContainer().Remove(card);
+                requestDict.Remove(request.id);
                 break;
             }
         }
-        
         requestList ??= new List<Request>();
         int index = requestList.FindIndex(r => r.id == request.id);
         if (index != -1)
@@ -161,12 +160,12 @@ public class RequestManager : MonoBehaviour
     
     public void RemoveArchivedRequest(Request request, Dictionary<string, Request> archivedRequestDict, ArchivedRequestsTab archivedRequestsTab, List<Request> archivedrequestList = null)
     {
-        archivedRequestDict.Remove(request.id);
         foreach (VisualElement card in archivedRequestsTab.GetCardContainer().Children())
         {
             if (card.name == request.id)
             {
                 archivedRequestsTab.GetCardContainer().Remove(card);
+                archivedRequestDict.Remove(request.id);
                 break;
             }
         }
