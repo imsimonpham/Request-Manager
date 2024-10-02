@@ -14,12 +14,14 @@ public class SheetManager : MonoBehaviour
     private string _tabName = "Today";
     private string _apiKey = "AIzaSyCCzE8MUPDIQPFovwiYAgmaZBtA5Y1_lHs";
     private string _sheetId = "16ZNq8X-tG6_l7dOviIyPOnpbjfgaqsFocbO5aRvzLPo";
-    private string _url;
-    [SerializeField] private int _apiCallCount;
+    private string _sheetUrl;
+    /*[SerializeField] private int _apiCallCount;*/
+    private string _formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
  
     [Header("UI")] 
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private RequestManager _requestManager;
+    [SerializeField] private AndroidNotifications _androidNotifications;
     
     [Header("Request Data")] 
     private Dictionary<string, Request> _requestDict = new Dictionary<string, Request>();
@@ -38,7 +40,7 @@ public class SheetManager : MonoBehaviour
 
     private void Start()
     {
-        _url = _baseURL + _sheetId + _property + _tabName + _keyString + _apiKey;
+        _sheetUrl = _baseURL + _sheetId + _property + _tabName + _keyString + _apiKey;
         InvokeRepeating("ObtainSheetData", 0f, 1f);
     }
 
@@ -49,7 +51,7 @@ public class SheetManager : MonoBehaviour
 
     IEnumerator ObtainSheetDataRoutine()
     {
-        UnityWebRequest webRequest = UnityWebRequest.Get(_url);
+        UnityWebRequest webRequest = UnityWebRequest.Get(_sheetUrl);
         yield return webRequest.SendWebRequest();
 
         if (webRequest.result == UnityWebRequest.Result.Success)
@@ -57,7 +59,7 @@ public class SheetManager : MonoBehaviour
         else
             Debug.LogError("Error: " + webRequest.error);
         
-        _apiCallCount++;
+        /*_apiCallCount++;*/
     }
     
     void ProcessData(string json)
@@ -89,6 +91,7 @@ public class SheetManager : MonoBehaviour
             priority = item[7],
             submitter = item[8],
             status = item[9],
+            notification = item[10],
             resolution = "",
             timeCompleted = "",
             handler = ""
@@ -99,7 +102,10 @@ public class SheetManager : MonoBehaviour
     void UpsertRequestData(Request request)
     {
         if (!_requestDict.ContainsKey(request.id) && request.status == "On-going")
+        {
             _requestManager.AddRequest(request, _requestDict, _requestList);
+            SendNotification(request);
+        }
         else 
             HandleExistingRequest(request);
     }
@@ -125,6 +131,34 @@ public class SheetManager : MonoBehaviour
         }
     }
 
-    public Dictionary<string,Request> GetArchivedRequestDict(){return _archivedRequestDict;}
+    IEnumerator UpdateNotificationRoutine(Request request)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("entry.715305477", request.id);
+        form.AddField("entry.530669248", request.status);
+        form.AddField("entry.446551434",  request.notification);
+        form.AddField("entry.1190988772", request.resolution);
+        form.AddField("entry.196062821", request.timeCompleted);
+        form.AddField("entry.1883248811", request.handler);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(_formUrl, form))
+        {
+            yield return www.SendWebRequest();
+            if(www.result == UnityWebRequest.Result.Success)
+                Debug.Log("Notification request has been sent");
+            else 
+                Debug.LogError("Error in feedback submission: " + www.error);
+        }
+    }
+
+    public void SendNotification(Request request)
+    {
+        if (request.notification == "Unsent")
+        {
+            _androidNotifications.SendNotification("New Request", "You have a new request", 1);
+            request.notification = "Sent";
+            StartCoroutine(UpdateNotificationRoutine(request));
+        }
+    }
 }
 

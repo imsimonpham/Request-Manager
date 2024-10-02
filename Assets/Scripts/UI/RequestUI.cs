@@ -92,7 +92,7 @@ public class RequestUI : MonoBehaviour
         {
             _pendingRequestsComponent.GetPendingRequestsTab().RemoveFromClassList("hide"); // scroll view
             _archivedRequestsComponent.GetArchiveRequestsTab().AddToClassList("hide"); // scroll view
-            _notesComponent.GetNotesTab().AddToClassList("archivedTasksIconContainer"); // scroll view
+            _notesComponent.GetNotesTab().AddToClassList("hide"); // scroll view
             SetActiveBorder(_pendingTasksIconContainer);
         }
         else if (iconContainer.Q<VisualElement>(name: "archivedTasksIconContainer") != null)

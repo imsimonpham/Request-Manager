@@ -12,7 +12,7 @@ public class RequestModal : MonoBehaviour
     [SerializeField] private RequestManager _requestManager;
     
     //send data to google from
-    private string _url = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
+    private string _formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
     
     //modal
     private VisualElement _modalContainer;
@@ -189,11 +189,12 @@ public class RequestModal : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("entry.715305477", request.id);
         form.AddField("entry.530669248", request.status);
+        form.AddField("entry.446551434",  request.notification);
         form.AddField("entry.1190988772", request.resolution);
         form.AddField("entry.196062821", request.timeCompleted);
         form.AddField("entry.1883248811", request.handler);
 
-        using (UnityWebRequest www = UnityWebRequest.Post(_url, form))
+        using (UnityWebRequest www = UnityWebRequest.Post(_formUrl, form))
         {
             yield return www.SendWebRequest();
             if(www.result == UnityWebRequest.Result.Success)
