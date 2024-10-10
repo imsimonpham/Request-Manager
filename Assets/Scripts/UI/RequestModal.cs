@@ -189,7 +189,6 @@ public class RequestModal : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("entry.715305477", request.id);
         form.AddField("entry.530669248", request.status);
-        form.AddField("entry.446551434",  request.notification);
         form.AddField("entry.1190988772", request.resolution);
         form.AddField("entry.196062821", request.timeCompleted);
         form.AddField("entry.1883248811", request.handler);

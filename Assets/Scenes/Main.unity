@@ -118,64 +118,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &228433575
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 228433576}
-  - component: {fileID: 228433577}
-  - component: {fileID: 228433578}
-  m_Layer: 0
-  m_Name: NotificationManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &228433576
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 228433575}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &228433577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 228433575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7935cf77c2bd27e48b917246b1fdde0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _androidNotifications: {fileID: 228433578}
---- !u!114 &228433578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 228433575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a4f1349a203563439a9b77824281266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,10 +223,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3e399a5cc8d1a34382793fdb534c140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _apiCallCount: 0
   _requestUI: {fileID: 2057400230}
   _requestManager: {fileID: 2057400232}
-  _androidNotifications: {fileID: 228433578}
   _pendingRequestsTab: {fileID: 2057400234}
   _archivedRequestsTab: {fileID: 2057400235}
   _requestList: []
@@ -532,4 +472,3 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 531654764}
   - {fileID: 2057400228}
-  - {fileID: 228433576}

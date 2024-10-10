@@ -21,7 +21,6 @@ public class SheetManager : MonoBehaviour
     [Header("UI")] 
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private RequestManager _requestManager;
-    [SerializeField] private AndroidNotifications _androidNotifications;
     
     [Header("Request Data")] 
     private Dictionary<string, Request> _requestDict = new Dictionary<string, Request>();
@@ -91,7 +90,6 @@ public class SheetManager : MonoBehaviour
             priority = item[7],
             submitter = item[8],
             status = item[9],
-            notification = item[10],
             resolution = "",
             timeCompleted = "",
             handler = ""
@@ -104,7 +102,6 @@ public class SheetManager : MonoBehaviour
         if (!_requestDict.ContainsKey(request.id) && request.status == "On-going")
         {
             _requestManager.AddRequest(request, _requestDict, _requestList);
-            SendNotification(request);
         }
         else 
             HandleExistingRequest(request);
@@ -128,36 +125,6 @@ public class SheetManager : MonoBehaviour
             
             if(_archivedRequestDict.ContainsKey(request.id))
                 _requestManager.RemoveArchivedRequest(request, _archivedRequestDict, _archivedRequestsTab, _archivedRequestList);
-        }
-    }
-
-    IEnumerator UpdateNotificationRoutine(Request request)
-    {
-        WWWForm form = new WWWForm();
-        form.AddField("entry.715305477", request.id);
-        form.AddField("entry.530669248", request.status);
-        form.AddField("entry.446551434",  request.notification);
-        form.AddField("entry.1190988772", request.resolution);
-        form.AddField("entry.196062821", request.timeCompleted);
-        form.AddField("entry.1883248811", request.handler);
-
-        using (UnityWebRequest www = UnityWebRequest.Post(_formUrl, form))
-        {
-            yield return www.SendWebRequest();
-            if(www.result == UnityWebRequest.Result.Success)
-                Debug.Log("Notification request has been sent");
-            else 
-                Debug.LogError("Error in feedback submission: " + www.error);
-        }
-    }
-
-    public void SendNotification(Request request)
-    {
-        if (request.notification == "Unsent")
-        {
-            _androidNotifications.SendNotification("New Request", "You have a new request", 1);
-            request.notification = "Sent";
-            StartCoroutine(UpdateNotificationRoutine(request));
         }
     }
 }
