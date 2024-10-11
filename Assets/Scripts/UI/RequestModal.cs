@@ -16,11 +16,12 @@ public class RequestModal : MonoBehaviour
     
     //modal
     private VisualElement _modalContainer;
-    private VisualElement _modal;
+    private ScrollView _modal;
     private string _modalPriority;
+    private Button _notesBtn;
     private Button _completionBtn;
     private TextField _initialInput;
-    private TextField _resolutionInput;
+    private TextField _notesInput;
     private string _id;
     private Label _timeReceived;
     private Label _area;
@@ -29,66 +30,68 @@ public class RequestModal : MonoBehaviour
     private Label _logType;
     private Label _priority;
     private Label _requester;
-    private Label _status;
-    private string _resolution;
     private Label _timeCompleted;
     private Request _currentRequest;
     
-    
     public void GenerateRequestModal()
     {
+        /*var modalClasses = request.priority == "High" ? "modalContainer highPriority" : "modalContainer";*/
         _modalContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("modalContainer", _requestUI.GetRootComponent());
-        _modal = _uiUtilities.CreateAndAddToParent<VisualElement>("modal", _modalContainer);
+        _modal = new ScrollView(ScrollViewMode.Vertical);
+        _modal.AddToClassList("modal");
+        _modal.touchScrollBehavior = ScrollView.TouchScrollBehavior.Clamped;
+        _modalContainer.Add(_modal);
         
         //close btn
-        var closeBtn = _uiUtilities.CreateAndAddToParent<Image>("closeBtn", _modal);
-        closeBtn.RegisterCallback<ClickEvent>(evt => HideModal());
+        var closeBtnContainer = _uiUtilities.CreateAndAddToParent<Image>("closeBtnContainer", _modal);
+        var closeBtn = _uiUtilities.CreateAndAddToParent<Image>("closeBtn", closeBtnContainer);
+        closeBtnContainer.RegisterCallback<ClickEvent>(evt => HideModal());
         
         //modal title
-        var modalTitle = _uiUtilities.CreateAndAddToParent<Label>("h3 upperCenter margin_bottom_sm margin_top_sm", _modal);
+        var modalTitle = _uiUtilities.CreateAndAddToParent<Label>("h3 upperCenter margin_bottom_sm margin_top_sm highLighted", _modal);
         _uiUtilities.UpdateLabel(modalTitle, "Request Details", "modalTitle");
         
         //request details
         var timeReceived = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
         _uiUtilities.UpdateLabel(timeReceived, "Time received:", "timeReceivedTitle"); 
-        _timeReceived = _uiUtilities.CreateAndAddToParent<Label>("h4 margin_bottom_md", _modal);
+        _timeReceived = _uiUtilities.CreateAndAddToParent<Label>("h4 margin_bottom_md grey", _modal);
         _uiUtilities.UpdateLabel(_timeReceived, "", "timeReceived");
         
         var areaTitle = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
         _uiUtilities.UpdateLabel(areaTitle, "Area/Room:", "areaTitle"); 
-        _area = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md", _modal);
+        _area = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md grey", _modal);
         _uiUtilities.UpdateLabel(_area, "", "area");
         
         var guestNameTitle = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
         _uiUtilities.UpdateLabel(guestNameTitle, "Guest's name:", "guestNameTitle"); 
-        _guestName = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md", _modal);
+        _guestName = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md grey", _modal);
         _uiUtilities.UpdateLabel(_guestName, "", "guestName");
         
         var requestTitle = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
         _uiUtilities.UpdateLabel(requestTitle, "Request details:", "requestTitle");
-        _request = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md", _modal);
+        _request = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md grey", _modal);
         _uiUtilities.UpdateLabel(_request,"", "request");
         
         var logTypeTitle = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
         _uiUtilities.UpdateLabel(logTypeTitle, "Log type:", "logTypeTitle");
-        _logType = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md", _modal);
+        _logType = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md grey", _modal);
         _uiUtilities.UpdateLabel(_logType,"", "logType");
         
         var priority = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
         _uiUtilities.UpdateLabel(priority, "Priority:", "priorityTitle"); 
-        _priority = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md", _modal);
+        _priority = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md grey", _modal);
         _uiUtilities.UpdateLabel(_priority, "", "priority");
         
         var requesterTitle = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
         _uiUtilities.UpdateLabel(requesterTitle, "Request logged by:", "requesterTitle");
-        _requester = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md", _modal);
+        _requester = _uiUtilities.CreateAndAddToParent<Label>("h4 wrappedText margin_bottom_md grey", _modal);
         _uiUtilities.UpdateLabel(_requester,"", "requester");
         
         //resolution input
         var resolutionTitle = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
-        _uiUtilities.UpdateLabel(resolutionTitle, "Resolution:", "resolutionTitle"); 
-        _resolutionInput = _uiUtilities.CreateAndAddToParent<TextField>("textField margin_bottom_md", _modal);
-        _resolutionInput.maxLength = 100;
+        _uiUtilities.UpdateLabel(resolutionTitle, "Notes:", "resolutionTitle"); 
+        _notesInput = _uiUtilities.CreateAndAddToParent<TextField>("textField margin_bottom_md", _modal);
+        _notesInput.maxLength = 100;
         
         //initial input
         var initialTitle = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _modal);
@@ -96,36 +99,52 @@ public class RequestModal : MonoBehaviour
         _initialInput = _uiUtilities.CreateAndAddToParent<TextField>("textField margin_bottom_lg", _modal);
         _initialInput.maxLength = 10;
         
+        //buttons
+        var btnContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("btnContainer", _modal);
+        
+        //notes button
+        _notesBtn = _uiUtilities.CreateAndAddToParent<Button>("btn notesBtn disabled", btnContainer);
+        _notesBtn.text = "Send notes only";
+        _notesBtn.RegisterCallback<ClickEvent>(_ => SendNotes(_currentRequest));
+        
         //completion button
-        _completionBtn = _uiUtilities.CreateAndAddToParent<Button>("btn", _modal);
-        _completionBtn.text = "Complete Request";
+        _completionBtn = _uiUtilities.CreateAndAddToParent<Button>("btn completionBtn disabled", btnContainer);
+        _completionBtn.text = "Complete request";
+        
         _completionBtn.RegisterCallback<ClickEvent>(_ => CompleteRequest(_currentRequest));
         
-        /*var request = new Request
+        /*var requestSample = new Request
         {
             id = "1",
             timeReceived = "'12:00:00 PM'",
             area = "Discovering new places often leads to unforgettable experiences and personal gro", 
             guestName = "John",
-            details = "Discovering new places often leads to unforgettable experiences and personal growth. Every journey teaches us valuable lessons and opens our minds to new possibilities. Embrace the adve",
+            details = "Discovering new places often leads to unforgettable experiences and personal growth. Every journey teaches us valuable lessons and opens our minds to new possibilities. Embrace",
             type = "Guest Request",
             receiver = "Houseperson",
-            priority = "Medium",
+            priority = "High",
             submitter = "SP",
             status = "On-going",
-            resolution = "",
+            notes = "",
             timeCompleted = "",
             handler = ""
         };
-        GenerateModalContent(request);*/
+        GenerateModalContent(requestSample);*/
     }
     
     private void ValidateInitialInput()
     {
-        if (_initialInput.text == "")
-            _completionBtn.SetEnabled(false);
+        ToggleButton(_completionBtn, !string.IsNullOrEmpty(_initialInput.text));
+        ToggleButton(_notesBtn, !string.IsNullOrEmpty(_notesInput.text));
+    }
+
+    private void ToggleButton(Button button, bool isEnabled)
+    {
+        button.SetEnabled(isEnabled);
+        if (isEnabled)
+            button.RemoveFromClassList("disabled");
         else
-            _completionBtn.SetEnabled(true);
+            button.AddToClassList("disabled");
     }
 
     public void ShowModal(Request request)
@@ -146,16 +165,28 @@ public class RequestModal : MonoBehaviour
     {
         _modalContainer.RemoveFromClassList("shownModal");
         _modal.RemoveFromClassList("shownModal");
+        _initialInput.value = "";
+        _notesInput.value = "";
         CancelInvoke("ValidateInitialInput");
     }
     
     private void CompleteRequest(Request request)
     {
         request.status = "Complete";
-        request.resolution = _resolutionInput.text;
+        request.notes = _notesInput.text;
         request.timeCompleted = _uiUtilities.GetCurrentTime();
         request.handler = _initialInput.text;
         _requestManager.HideRequestCard(request, _pendingRequestsTab.GetCardContainer().Children());
+        StartCoroutine(UpdateSheetDataRoutine(request));
+        HideModal();
+    }
+
+    private void SendNotes(Request request)
+    {
+        request.status = "On-going";
+        request.notes = _notesInput.text;
+        request.timeCompleted = "";
+        request.handler = "";
         StartCoroutine(UpdateSheetDataRoutine(request));
         HideModal();
     }
@@ -163,33 +194,20 @@ public class RequestModal : MonoBehaviour
     private void GenerateModalContent(Request request)
     {
         _timeReceived.text = request.timeReceived.Substring(1, request.timeReceived.Length -2);
-        _timeReceived.AddToClassList("grey");
-        
         _area.text = request.area;
-        _area.AddToClassList("grey");
-        
         _guestName.text = request.guestName;
-        _guestName.AddToClassList("grey");
-        
         _request.text = request.details;
-        _request.AddToClassList("grey");
-        
         _logType.text = request.type;
-        _logType.AddToClassList("grey");
-        
         _priority.text = request.priority;
-        _priority.AddToClassList("grey");
-        
         _requester.text = request.submitter;
-        _requester.AddToClassList("grey");
-    }
+    }   
 
     IEnumerator UpdateSheetDataRoutine(Request request)
     {
         WWWForm form = new WWWForm();
         form.AddField("entry.715305477", request.id);
         form.AddField("entry.530669248", request.status);
-        form.AddField("entry.1190988772", request.resolution);
+        form.AddField("entry.1190988772", request.notes);
         form.AddField("entry.196062821", request.timeCompleted);
         form.AddField("entry.1883248811", request.handler);
 

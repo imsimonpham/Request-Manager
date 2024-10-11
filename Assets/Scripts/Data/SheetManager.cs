@@ -90,7 +90,7 @@ public class SheetManager : MonoBehaviour
             priority = item[7],
             submitter = item[8],
             status = item[9],
-            resolution = "",
+            notes = "",
             timeCompleted = "",
             handler = ""
         };

@@ -44,7 +44,25 @@ public class PendingRequestsTab : MonoBehaviour
             timeCompleted = "",
             handler = ""
         };
-        _requestManager.CreateRequestCard(request);*/
+        
+        var request_2 = new Request
+        {
+            id = "1",
+            timeReceived = "'12:00:00 PM'",
+            area = "205",
+            guestName = "John",
+            details = "2 sets of towels",
+            type = "Guest Request",
+            receiver = "Houseperson",
+            priority = "High",
+            submitter = "SP",
+            status = "On-going",
+            resolution = "",
+            timeCompleted = "",
+            handler = ""
+        };
+        _requestManager.CreateRequestCard(request);
+        _requestManager.CreateRequestCard(request_2);*/
     }
     
     public VisualElement GetPendingRequestsTab(){ return _pendingRequestsTab;}

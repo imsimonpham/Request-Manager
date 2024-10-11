@@ -11,7 +11,7 @@ public class Request
     public string priority;
     public string submitter;
     public string status;
-    public string resolution;
+    public string notes;
     public string timeCompleted;
     public string handler;
 }

@@ -80,7 +80,7 @@ public class RequestUI : MonoBehaviour
         _uiUtilities.CreateAndAddToParent<Image>("archive", _archivedTasksIconContainer);
         _uiUtilities.CreateAndAddToParent<Image>("notes", _notesIconContainer);
         
-        GenerateActiveTab(_pendingTasksIconContainer);
+        GenerateActiveTab(_notesIconContainer);
         _pendingTasksIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_pendingTasksIconContainer));
         _archivedTasksIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_archivedTasksIconContainer));
         _notesIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_notesIconContainer));

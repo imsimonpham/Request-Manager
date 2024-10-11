@@ -9,7 +9,6 @@ public class ArchivedRequestsTab : MonoBehaviour
     
     private VisualElement _archiveRequestsTab;
     private ScrollView _cardContainer;
-    private VisualElement _bottomIcon;
     private Label _tabTitle;
     private string _tabTitleText = "Archived Requests";
     

@@ -1,9 +1,7 @@
 /* Variables */
 :root{
     /* Colors */
-    --color-base: white;
-    --color-base_1: rgba(215, 215, 215, 0.3);
-    --color-highPriority-bg: #004961; 
+    /*--color-highPriority-bg: #004961; 
     --color-mediumPriority-bg:  #037CA1; 
     --color-bottomMenu: #1A5B71;
     --color-requestCard-completed: #003344; 
@@ -12,41 +10,48 @@
     --color-inputField: rgba(0, 0, 0, 0.2);
     --color-border: rgba(0, 0, 0, 0.2);
     --color-dragger:  rgb(115, 115, 115);
-    --color-textBase: black;
-    --color-textBase_1: rgba(215, 215, 215, 0.7);
-    --color-btn: #D5E14D;
-    --color-iconActive: rgba(0,0,0,0.35);
+    --color-btn_1: rgba(215, 215, 215, 0.6);
+    --color-btn_2: #D5E14D;
+    --color-iconActive: rgba(0,0,0,0.35);*/
+    
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #6c757d;
+    --color-bg-primary: #0d6efd;
+    --color-bg-secondary: #FFFFFF;
+    --color-bg-warning:  #FFC107;
+    --color-bg-danger: #DC3545;
+    --color-bg-success: #198754;
     
     /* Font size */
     --fontSize-xxl: 60px;
     --fontSize-xl: 50px;
     --fontSize-lg: 40px;
-    --fontSize-md: 30px
+    --fontSize-md: 32px;
 }
 
 /* General classes */
 .h1{
-    color: var(--color-textBase_1);
+    color: var(--color-text-primary);
     font-size: var(--fontSize-xxl);
     -unity-font-style: bold;
     padding-bottom: 30px;
 } 
 
 .h2{
-    color: var(--color-textBase_1);
+    color: var(--color-text-primary);
     font-size: var(--fontSize-xl);
     -unity-font-style: bold;
     padding-bottom: 40px;
 }
 
 .h3{
-    color: var(--color-textBase_1);
+    color: var(--color-text-primary);
     font-size: var(--fontSize-lg);
     -unity-font-style: bold;
 }
 
 .h4{
-    color: var(--color-textBase_1);
+    color: var(--color-text-primary);
     font-size: var(--fontSize-md);
 }
 
@@ -56,7 +61,7 @@
 }
 
 .grey{
-    color: var(--color-base_1);
+    color: var(--color-text-secondary);
 }
 
 .upperCenter{
@@ -100,18 +105,12 @@
 .tab.hide{
     display: none;
 }
-.cardContainer{
-    /*background-color: blue;*/
-    /*min-height: 100%;*/
-}
 
 .requestCard{
-    width: 96%;
     height: 200px;
-    background-color: var(--color-mediumPriority-bg);
-    border-color: var(--color-border);
-    border-width: 2px;
-    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-left-width: 15px;
+    border-left-color: #FFC107;
     padding: 10px 15px;
     display: flex;
     flex-direction: column;
@@ -124,15 +123,17 @@
 }
 
 .requestCard.archived{
-    background-color: var(--color-requestCard-completed);
+    background-color: rgba(0, 0, 0, 0.8);
     flex-direction: row;
     justify-content: space-between;
-    
+}
+
+.requestCard.archived{
+    border-left-color: #198754;
 }
 
 .requestCard.highPriority{
-    background-color: var(--color-highPriority-bg);
-    border-color: var(--color-border);
+    border-left-color: #DC3545;
 }
 
 .bottomContainer{
@@ -158,8 +159,31 @@
     --unity-image: url("../Images/undoBtn.png");
 }
 
-/* Modal */
+.textContainer{
+    height: 100%;
+}
 
+.notesTextField{
+    width: 100%;
+    height: 100%;
+    white-space: normal;
+}
+
+.notesTextField .unity-base-text-field__input{
+    border-radius: 5px;
+    font-size: var(--fontSize-md);
+    margin-left: 0;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-width: 0;
+}
+
+.textContainer .unity-scroll-view__horizontal-scroller .unity-base-slider__dragger{
+    display: none;
+}
+
+/* Modal */
 .modalContainer{
     width: 100%;
     height: 100%;
@@ -177,9 +201,11 @@
     left: 0;
     bottom: 0;
     border-radius: 20px;
-    background-color: var(--color-mediumPriority-bg);
+    background-color: #282828;
     border-top-width: 2px;
     padding: 30px;
+    border-left-width: 10px;
+    border-left-color: #FFC107;
 }
 
 .modalContainer.shownModal{
@@ -188,12 +214,19 @@
 
 .modal.highPriority
 {
-    background-color: var(--color-highPriority-bg);
+    border-left-color: #DC3545;
+}
+
+.closeBtnContainer{
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .closeBtn{
     --unity-image: url("../Images/back.png");
-    align-self: flex-start; 
 }
 
 .textField{
@@ -206,26 +239,46 @@
     border-width: 2px;
     border-radius: 5px;
     border-color: var(--color-inputField);
-    background-color: var(--color-base);
+    background-color: var(--color-base_1);
     font-size: var(--fontSize-md);
     margin-left: 0;
 }
 
+.btnContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .btn{
-    width: 350px;
+    width: auto;
     align-self: center;
     height: 80px;
     font-size: var(--fontSize-md);
     -unity-font-style: bold;
     border-radius: 5px;
     border-width: 0px;
-    background-color: var(--color-btn);
-    padding: 5px 10px;
+    padding: 5px 20px;
 }
+
+.notesBtn{
+    color: var(--color-textBase_1);
+    background-color: #0d6efd;
+}
+
+.completionBtn{
+    color: var(--color-textBase_1);
+    background-color: #198754;
+}
+
+.btn.disabled{
+    opacity: 0.05;
+}
+
 
 /* bottom menu */
 .bottomMenu{
-    background-color: var(--color-bottomMenu);
+    background-color: rgba(0, 0, 0, 0.98);
     width: 100%;
     height: 120px;
     display: flex;
@@ -243,7 +296,7 @@
 }
 
 .bottomIcon.active{
-    border-top-color: var(--color-highlight);
+    border-top-color: #198754;
 }
 
 .pendingTask{

@@ -6,11 +6,10 @@ public class NotesTab : MonoBehaviour
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private UIUtilities _uiUtilities;
     private VisualElement _notesTab;
-    private ScrollView _textContainer;
-    private VisualElement _bottomIcon;
+    private VisualElement _textContainer;
     private Label _tabTitle;
-    private string _tabTitleText = "Today's note";
-    
+    private string _tabTitleText = "Today's notes";
+    private TextField _notesInput;
     
     public void GenerateNotesTab()
     {
@@ -21,10 +20,16 @@ public class NotesTab : MonoBehaviour
         _notesTab.AddToClassList("hide");
         
         //create text container
-        _textContainer = new ScrollView(ScrollViewMode.Vertical);
-        _textContainer.AddToClassList("cardContainer");
+        /*_textContainer = new ScrollView(ScrollViewMode.Vertical);
+        _textContainer.AddToClassList("textContainer");
         _textContainer.touchScrollBehavior = ScrollView.TouchScrollBehavior.Clamped;
-        _requestUI.GetContainer().Add(_textContainer);
+        _notesTab.Add(_textContainer);*/
+        _textContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("textContainer", _requestUI.GetContainer());
+        
+        //note field
+        _notesInput = _uiUtilities.CreateAndAddToParent<TextField>("notesTextField margin_bottom_lg", _textContainer);
+        _notesInput.multiline = true;
+        
     }
     
     public VisualElement GetNotesTab() {return _notesTab;}
