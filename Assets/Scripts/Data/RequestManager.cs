@@ -155,6 +155,7 @@ public class RequestManager : MonoBehaviour
         request.status = "On-going";
         request.timeCompleted = "";
         request.handler = "";
+        request.isViewed = "Viewed";
         HideRequestCard(request, _archivedRequestsTab.GetCardContainer().Children());
         StartCoroutine(RestoreRequestRoutine(request));
     }
@@ -177,6 +178,14 @@ public class RequestManager : MonoBehaviour
             archivedrequestList.RemoveAt(index);
     }
     
+    public void RemoveAllArchivedRequests(Dictionary<string, Request> archivedRequestDict, ArchivedRequestsTab archivedRequestsTab, List<Request> archivedrequestList = null)
+    {
+        archivedRequestsTab.GetCardContainer().Clear();
+        archivedRequestDict.Clear();
+        archivedrequestList ??= new List<Request>();
+        archivedrequestList.Clear();
+    }
+    
     public void HideRequestCard(Request request, IEnumerable<VisualElement> cardCollection)
     {
         foreach (VisualElement card in cardCollection)
@@ -197,6 +206,7 @@ public class RequestManager : MonoBehaviour
         form.AddField("entry.1190988772", request.notes);
         form.AddField("entry.196062821", request.timeCompleted);
         form.AddField("entry.1883248811", request.handler);
+        form.AddField("entry.1142493925", request.isViewed);
 
         using (UnityWebRequest www = UnityWebRequest.Post(_url, form))
         {

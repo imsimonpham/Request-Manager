@@ -14,4 +14,5 @@ public class Request
     public string notes;
     public string timeCompleted;
     public string handler;
+    public string isViewed;
 }

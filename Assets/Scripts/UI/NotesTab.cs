@@ -24,7 +24,7 @@ public class NotesTab : MonoBehaviour
         _textContainer.AddToClassList("textContainer");
         _textContainer.touchScrollBehavior = ScrollView.TouchScrollBehavior.Clamped;
         _notesTab.Add(_textContainer);*/
-        _textContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("textContainer", _requestUI.GetContainer());
+        _textContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("textContainer", _notesTab);
         
         //note field
         _notesInput = _uiUtilities.CreateAndAddToParent<TextField>("notesTextField margin_bottom_lg", _textContainer);

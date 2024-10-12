@@ -68,7 +68,12 @@ public class SheetManager : MonoBehaviour
         for (int i = 0; i < arr.Count; i++)
         {
             var item = arr[i];
-            if (i > 0)
+            if (arr.Count < 2)
+            {
+                if (_archivedRequestDict.Count != 0)
+                    _requestManager.RemoveAllArchivedRequests(_archivedRequestDict, _archivedRequestsTab, _archivedRequestList);
+            }
+            else
             {
                 Request request = TransformRequestData (item);
                 UpsertRequestData(request);

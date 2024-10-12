@@ -80,7 +80,7 @@ public class RequestUI : MonoBehaviour
         _uiUtilities.CreateAndAddToParent<Image>("archive", _archivedTasksIconContainer);
         _uiUtilities.CreateAndAddToParent<Image>("notes", _notesIconContainer);
         
-        GenerateActiveTab(_notesIconContainer);
+        GenerateActiveTab(_pendingTasksIconContainer);
         _pendingTasksIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_pendingTasksIconContainer));
         _archivedTasksIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_archivedTasksIconContainer));
         _notesIconContainer.RegisterCallback<ClickEvent>(evt => GenerateActiveTab(_notesIconContainer));
@@ -92,7 +92,7 @@ public class RequestUI : MonoBehaviour
         {
             _pendingRequestsComponent.GetPendingRequestsTab().RemoveFromClassList("hide"); // scroll view
             _archivedRequestsComponent.GetArchiveRequestsTab().AddToClassList("hide"); // scroll view
-            _notesComponent.GetNotesTab().AddToClassList("hide"); // scroll view
+            _notesComponent.GetNotesTab().AddToClassList("hide");
             SetActiveBorder(_pendingTasksIconContainer);
         }
         else if (iconContainer.Q<VisualElement>(name: "archivedTasksIconContainer") != null)

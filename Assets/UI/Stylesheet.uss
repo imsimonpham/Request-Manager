@@ -1,19 +1,6 @@
 /* Variables */
 :root{
     /* Colors */
-    /*--color-highPriority-bg: #004961; 
-    --color-mediumPriority-bg:  #037CA1; 
-    --color-bottomMenu: #1A5B71;
-    --color-requestCard-completed: #003344; 
-    --color-requestCard-aborted: #11100F;
-    --color-highlight: #D5E14D;
-    --color-inputField: rgba(0, 0, 0, 0.2);
-    --color-border: rgba(0, 0, 0, 0.2);
-    --color-dragger:  rgb(115, 115, 115);
-    --color-btn_1: rgba(215, 215, 215, 0.6);
-    --color-btn_2: #D5E14D;
-    --color-iconActive: rgba(0,0,0,0.35);*/
-    
     --color-text-primary: #FFFFFF;
     --color-text-secondary: #6c757d;
     --color-bg-primary: #0d6efd;
@@ -21,6 +8,10 @@
     --color-bg-warning:  #FFC107;
     --color-bg-danger: #DC3545;
     --color-bg-success: #198754;
+    --color-bg-seeThru: rgba(0, 0, 0, 0.8);
+    
+    --color-bg-bottomMenu: rgba(0, 0, 0, 0.98);
+    --color-bg-modal: #282828;
     
     /* Font size */
     --fontSize-xxl: 60px;
@@ -108,9 +99,9 @@
 
 .requestCard{
     height: 200px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--color-bg-seeThru);
     border-left-width: 15px;
-    border-left-color: #FFC107;
+    border-left-color: var(--color-bg-warning);
     padding: 10px 15px;
     display: flex;
     flex-direction: column;
@@ -123,17 +114,17 @@
 }
 
 .requestCard.archived{
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--color-bg-seeThru);
     flex-direction: row;
     justify-content: space-between;
 }
 
 .requestCard.archived{
-    border-left-color: #198754;
+    border-left-color: var(--color-bg-success);
 }
 
 .requestCard.highPriority{
-    border-left-color: #DC3545;
+    border-left-color: var(--color-bg-danger);
 }
 
 .bottomContainer{
@@ -160,7 +151,7 @@
 }
 
 .textContainer{
-    height: 100%;
+    height: 1300px;
 }
 
 .notesTextField{
@@ -174,13 +165,9 @@
     font-size: var(--fontSize-md);
     margin-left: 0;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
+    background-color: var(--color-bg-seeThru);
+    color: var(--color-text-primary);
     border-width: 0;
-}
-
-.textContainer .unity-scroll-view__horizontal-scroller .unity-base-slider__dragger{
-    display: none;
 }
 
 /* Modal */
@@ -201,11 +188,11 @@
     left: 0;
     bottom: 0;
     border-radius: 20px;
-    background-color: #282828;
+    background-color: var(--color-bg-modal);
     border-top-width: 2px;
     padding: 30px;
     border-left-width: 10px;
-    border-left-color: #FFC107;
+    border-left-color: var(--color-bg-warning);
 }
 
 .modalContainer.shownModal{
@@ -214,7 +201,7 @@
 
 .modal.highPriority
 {
-    border-left-color: #DC3545;
+    border-left-color: var(--color-bg-danger);
 }
 
 .closeBtnContainer{
@@ -238,8 +225,7 @@
     height: 50px;
     border-width: 2px;
     border-radius: 5px;
-    border-color: var(--color-inputField);
-    background-color: var(--color-base_1);
+    background-color: var(--color-bg-secondary);
     font-size: var(--fontSize-md);
     margin-left: 0;
 }
@@ -257,28 +243,27 @@
     font-size: var(--fontSize-md);
     -unity-font-style: bold;
     border-radius: 5px;
-    border-width: 0px;
     padding: 5px 20px;
+    border-width: 0;
 }
 
 .notesBtn{
-    color: var(--color-textBase_1);
-    background-color: #0d6efd;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
 }
 
 .completionBtn{
-    color: var(--color-textBase_1);
-    background-color: #198754;
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-success);
 }
 
 .btn.disabled{
     opacity: 0.05;
 }
 
-
 /* bottom menu */
 .bottomMenu{
-    background-color: rgba(0, 0, 0, 0.98);
+    background-color: var(--color-bg-bottomMenu);
     width: 100%;
     height: 120px;
     display: flex;
@@ -296,7 +281,7 @@
 }
 
 .bottomIcon.active{
-    border-top-color: #198754;
+    border-top-color: var(--color-bg-secondary);
 }
 
 .pendingTask{
@@ -326,6 +311,5 @@
 }
 
 .unity-base-slider__dragger{
-    background-color: var(--color-dragger);
-    border-radius: 8px;
+    display: none;
 }

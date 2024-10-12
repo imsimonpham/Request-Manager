@@ -156,6 +156,9 @@ public class RequestModal : MonoBehaviour
             _modal.AddToClassList("highPriority");
         else
             _modal.RemoveFromClassList("highPriority");
+
+        if (request.isViewed == null)
+            ViewRequest(request);
         
         GenerateModalContent(_currentRequest);
         InvokeRepeating("ValidateInitialInput", 0, 0.5f);
@@ -169,6 +172,16 @@ public class RequestModal : MonoBehaviour
         _notesInput.value = "";
         CancelInvoke("ValidateInitialInput");
     }
+
+    private void ViewRequest(Request request)
+    {
+        request.status = "On-going";
+        request.notes = "";
+        request.timeCompleted = "";
+        request.handler = "";
+        request.isViewed = "Viewed";
+        StartCoroutine(UpdateSheetDataRoutine(request));
+    }
     
     private void CompleteRequest(Request request)
     {
@@ -176,6 +189,7 @@ public class RequestModal : MonoBehaviour
         request.notes = _notesInput.text;
         request.timeCompleted = _uiUtilities.GetCurrentTime();
         request.handler = _initialInput.text;
+        request.isViewed = "Viewed";
         _requestManager.HideRequestCard(request, _pendingRequestsTab.GetCardContainer().Children());
         StartCoroutine(UpdateSheetDataRoutine(request));
         HideModal();
@@ -210,6 +224,7 @@ public class RequestModal : MonoBehaviour
         form.AddField("entry.1190988772", request.notes);
         form.AddField("entry.196062821", request.timeCompleted);
         form.AddField("entry.1883248811", request.handler);
+        form.AddField("entry.1142493925", request.isViewed);
 
         using (UnityWebRequest www = UnityWebRequest.Post(_formUrl, form))
         {
