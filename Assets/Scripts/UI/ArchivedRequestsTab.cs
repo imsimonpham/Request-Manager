@@ -10,7 +10,9 @@ public class ArchivedRequestsTab : MonoBehaviour
     private VisualElement _archiveRequestsTab;
     private ScrollView _cardContainer;
     private Label _tabTitle;
-    private string _tabTitleText = "Archived Requests";
+    private string _tabTitleTextBase = "Archived Requests";
+    private int _requestCount;
+    private string _tabTitleText;
     
     public void GenerateArchivedRequestsTab()
     {
@@ -48,4 +50,12 @@ public class ArchivedRequestsTab : MonoBehaviour
     
     public VisualElement GetArchiveRequestsTab() {return _archiveRequestsTab;}
     public VisualElement GetCardContainer() {return _cardContainer;}
+    
+    public void UpdateArchivedRequestCountUI(int requestCount)
+    {
+        _requestCount = requestCount;
+        _tabTitleText = _tabTitleTextBase + " (" + _requestCount + ")";
+        /*_uiUtilities.UpdateLabel(_tabTitle, _tabTitleText, "tabTitle");*/
+        _uiUtilities.UpdateLabel(_tabTitle == null ? new Label("Archived Requests") : _tabTitle, _tabTitleText, "tabTitle");
+    }
 }

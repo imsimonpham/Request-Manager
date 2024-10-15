@@ -15,18 +15,18 @@ public class SheetManager : MonoBehaviour
     private string _apiKey = "AIzaSyCCzE8MUPDIQPFovwiYAgmaZBtA5Y1_lHs";
     private string _sheetId = "16ZNq8X-tG6_l7dOviIyPOnpbjfgaqsFocbO5aRvzLPo";
     private string _sheetUrl;
-    /*[SerializeField] private int _apiCallCount;*/
     private string _formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
  
     [Header("UI")] 
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private RequestManager _requestManager;
     
-    [Header("Request Data")] 
+    [Header("Request")] 
     private Dictionary<string, Request> _requestDict = new Dictionary<string, Request>();
     private Dictionary<string, Request> _archivedRequestDict = new Dictionary<string, Request>();
     [SerializeField] private PendingRequestsTab _pendingRequestsTab;
     [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
+    [SerializeField] private RequestModal _requestModal;
     [SerializeField] private List<Request> _requestList= new List<Request>(); //for debug purposes
     [SerializeField] private List<Request> _archivedRequestList= new List<Request>(); //debug
     
@@ -41,6 +41,8 @@ public class SheetManager : MonoBehaviour
     {
         _sheetUrl = _baseURL + _sheetId + _property + _tabName + _keyString + _apiKey;
         InvokeRepeating("ObtainSheetData", 0f, 1f);
+        InvokeRepeating("UpdatePendingRequestCountUI", 0f, 0.5f);
+        InvokeRepeating("UpdateArchivedRequestCountUI", 0f, 0.5f);
     }
 
     void ObtainSheetData()
@@ -57,8 +59,6 @@ public class SheetManager : MonoBehaviour
             ProcessData(webRequest.downloadHandler.text);
         else
             Debug.LogError("Error: " + webRequest.error);
-        
-        /*_apiCallCount++;*/
     }
     
     void ProcessData(string json)
@@ -72,11 +72,18 @@ public class SheetManager : MonoBehaviour
             {
                 if (_archivedRequestDict.Count != 0)
                     _requestManager.RemoveAllArchivedRequests(_archivedRequestDict, _archivedRequestsTab, _archivedRequestList);
+                if (_requestDict.Count != 0)
+                    _requestManager.RemoveAllPendingRequests(_requestDict, _pendingRequestsTab, _requestList);
             }
-            else
+            else if(item[6] == "Houseperson")
             {
                 Request request = TransformRequestData (item);
                 UpsertRequestData(request);
+                if (_requestModal.IsModalOpen() && _requestModal.GetCurrentRequestID() == request.id)
+                {
+                    _requestModal.GenerateModalContent(request);
+                    _requestModal.UpdateModalUI(request);
+                }
             }
         }
     }
@@ -97,7 +104,8 @@ public class SheetManager : MonoBehaviour
             status = item[9],
             notes = "",
             timeCompleted = "",
-            handler = ""
+            handler = "",
+            isViewed =  item[13]
         };
         return request;
     }
@@ -105,11 +113,10 @@ public class SheetManager : MonoBehaviour
     void UpsertRequestData(Request request)
     {
         if (!_requestDict.ContainsKey(request.id) && request.status == "On-going")
-        {
             _requestManager.AddRequest(request, _requestDict, _requestList);
-        }
-        else 
+        else
             HandleExistingRequest(request);
+            
     }
 
     private void HandleExistingRequest(Request request)
@@ -132,5 +139,8 @@ public class SheetManager : MonoBehaviour
                 _requestManager.RemoveArchivedRequest(request, _archivedRequestDict, _archivedRequestsTab, _archivedRequestList);
         }
     }
+
+    private void UpdatePendingRequestCountUI(){ _pendingRequestsTab.UpdatePendingRequestCountUI(_requestDict.Count);}
+    private void UpdateArchivedRequestCountUI(){ _archivedRequestsTab.UpdateArchivedRequestCountUI(_archivedRequestDict.Count);}
 }
 

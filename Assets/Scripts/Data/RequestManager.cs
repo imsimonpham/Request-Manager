@@ -138,6 +138,14 @@ public class RequestManager : MonoBehaviour
             requestList.RemoveAt(index);
     }
     
+    public void RemoveAllPendingRequests(Dictionary<string, Request> requestDict, PendingRequestsTab pendingRequestsTab, List<Request> requestList = null)
+    {
+        pendingRequestsTab.GetCardContainer().Clear();
+        requestDict.Clear();
+        requestList ??= new List<Request>();
+        requestList.Clear();
+    }
+    
     public void AddArchivedRequest(Request request,  Dictionary<string, Request> archivedRequestDict,  List<Request> archivedRequestList = null)
     {
         if (!archivedRequestDict.ContainsKey(request.id))

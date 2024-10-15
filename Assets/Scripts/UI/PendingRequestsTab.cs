@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,7 +12,9 @@ public class PendingRequestsTab : MonoBehaviour
     private ScrollView _cardContainer;
     private VisualElement _bottomIcon;
     private Label _tabTitle;
-    private string _tabTitleText = "Pending Requests";
+    private string _tabTitleTextBase = "Pending Requests";
+    private int _requestCount;
+    private string _tabTitleText;
 
     public void GeneratePendingRequestsTab()
     {
@@ -67,4 +70,11 @@ public class PendingRequestsTab : MonoBehaviour
     
     public VisualElement GetPendingRequestsTab(){ return _pendingRequestsTab;}
     public VisualElement GetCardContainer(){return _cardContainer;}
+
+    public void UpdatePendingRequestCountUI(int requestCount)
+    {
+        _requestCount = requestCount;
+        _tabTitleText = _tabTitleTextBase + " (" + _requestCount + ")";
+        _uiUtilities.UpdateLabel(_tabTitle == null ? new Label("Pending Requests") : _tabTitle, _tabTitleText, "tabTitle");
+    }
 }

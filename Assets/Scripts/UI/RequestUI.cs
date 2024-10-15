@@ -12,6 +12,7 @@ public class RequestUI : MonoBehaviour
     [SerializeField] private ArchivedRequestsTab _archivedRequestsComponent;
     [SerializeField] private NotesTab _notesComponent;
     [SerializeField] private RequestModal _requestModal;
+    
     private VisualElement _pendingTasksIconContainer;
     private VisualElement _archivedTasksIconContainer;
     private VisualElement _notesIconContainer;
@@ -19,7 +20,7 @@ public class RequestUI : MonoBehaviour
     private VisualElement _root;
     private VisualElement _container;
     private VisualElement _bottomMenu;
-    /*private string _tabTitleText;*/
+    private VisualElement _loadingScreen;
     
     //App hierarchy
     /*
@@ -32,6 +33,7 @@ public class RequestUI : MonoBehaviour
                 * ChecklistTab
             * BottomMenu
             * RequestModal (position: absolute)
+            * Loading Screen (position: absolute)  
      */
     
     private void OnValidate()
@@ -55,12 +57,21 @@ public class RequestUI : MonoBehaviour
         var title = _uiUtilities.CreateAndAddToParent<Label>("h1 upperCenter title", _container);
         _uiUtilities.UpdateLabel(title, _uiUtilities.GetToday(), "title");
         
+        //app tabs
         _pendingRequestsComponent.GeneratePendingRequestsTab();
         _archivedRequestsComponent.GenerateArchivedRequestsTab();
         _notesComponent.GenerateNotesTab();
+        
+        //app bottom menu
         GenerateBottomMenu();
         
+        //request modal
         _requestModal.GenerateRequestModal();
+        
+        //loading screen
+        _loadingScreen = _uiUtilities.CreateAndAddToParent<VisualElement>("loadingScreen hide", _root);
+        var loadingText = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", _loadingScreen);
+        _uiUtilities.UpdateLabel(loadingText, "Completing request...", "loadingText"); 
     }
 
     private void GenerateBottomMenu()
@@ -124,4 +135,12 @@ public class RequestUI : MonoBehaviour
     public void GenerateUI() {StartCoroutine(GenerateUIRoutine());}
     public VisualElement GetRootComponent(){return _root;}
     public VisualElement GetContainer(){return _container;}
+
+    public void ShowLoadingScreen(bool show)
+    {
+        if (show)
+            _loadingScreen.RemoveFromClassList("hide");
+        else 
+            _loadingScreen.AddToClassList("hide");
+    }
 }

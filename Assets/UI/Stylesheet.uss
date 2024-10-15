@@ -3,15 +3,16 @@
     /* Colors */
     --color-text-primary: #FFFFFF;
     --color-text-secondary: #6c757d;
+    
     --color-bg-primary: #0d6efd;
     --color-bg-secondary: #FFFFFF;
     --color-bg-warning:  #FFC107;
     --color-bg-danger: #DC3545;
     --color-bg-success: #198754;
     --color-bg-seeThru: rgba(0, 0, 0, 0.8);
-    
     --color-bg-bottomMenu: rgba(0, 0, 0, 0.98);
     --color-bg-modal: #282828;
+    --color-bg-loadingScreen: rgba(0, 0, 0, 0.95);
     
     /* Font size */
     --fontSize-xxl: 60px;
@@ -77,6 +78,23 @@
 
 .bold{
     -unity-font-style: bold;
+}
+
+/* Loading Screen */
+.loadingScreen{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg-loadingScreen);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loadingScreen.hide{
+    display: none;
 }
 
 /* Specific classes */

@@ -10,11 +10,17 @@ public class RequestModal : MonoBehaviour
     [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
     [SerializeField] private PendingRequestsTab _pendingRequestsTab;
     [SerializeField] private RequestManager _requestManager;
+    [SerializeField] private float _waitTimeBeforeCompletingRequest;
+    [SerializeField] private float _loadingScreenDuration;
     
     //send data to google from
     private string _formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
     
     //modal
+    private bool _isOpen;
+    private Request _currentRequest;
+    
+    //modal UI
     private VisualElement _modalContainer;
     private ScrollView _modal;
     private string _modalPriority;
@@ -31,11 +37,11 @@ public class RequestModal : MonoBehaviour
     private Label _priority;
     private Label _requester;
     private Label _timeCompleted;
-    private Request _currentRequest;
+    
+    
     
     public void GenerateRequestModal()
     {
-        /*var modalClasses = request.priority == "High" ? "modalContainer highPriority" : "modalContainer";*/
         _modalContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("modalContainer", _requestUI.GetRootComponent());
         _modal = new ScrollView(ScrollViewMode.Vertical);
         _modal.AddToClassList("modal");
@@ -149,6 +155,8 @@ public class RequestModal : MonoBehaviour
 
     public void ShowModal(Request request)
     {
+        _isOpen = true;
+        _id = request.id;
         _currentRequest = request;
         _modalContainer.AddToClassList("shownModal");
         _modalPriority = request.priority;
@@ -161,13 +169,13 @@ public class RequestModal : MonoBehaviour
             ViewRequest(request);
         
         GenerateModalContent(_currentRequest);
-        InvokeRepeating("ValidateInitialInput", 0, 0.5f);
+        InvokeRepeating("ValidateInitialInput", 0, 0.1f);
     }
 
     private void HideModal()
     {
+        _isOpen = false;
         _modalContainer.RemoveFromClassList("shownModal");
-        _modal.RemoveFromClassList("shownModal");
         _initialInput.value = "";
         _notesInput.value = "";
         CancelInvoke("ValidateInitialInput");
@@ -180,10 +188,10 @@ public class RequestModal : MonoBehaviour
         request.timeCompleted = "";
         request.handler = "";
         request.isViewed = "Viewed";
-        StartCoroutine(UpdateSheetDataRoutine(request));
+        StartCoroutine(UpdateSheetDataRoutine(request, false));
     }
     
-    private void CompleteRequest(Request request)
+    void  CompleteRequest(Request request)
     {
         request.status = "Complete";
         request.notes = _notesInput.text;
@@ -191,8 +199,8 @@ public class RequestModal : MonoBehaviour
         request.handler = _initialInput.text;
         request.isViewed = "Viewed";
         _requestManager.HideRequestCard(request, _pendingRequestsTab.GetCardContainer().Children());
-        StartCoroutine(UpdateSheetDataRoutine(request));
-        HideModal();
+        StartCoroutine(UpdateSheetDataRoutine(request, true));
+        StartCoroutine(ShowLoadingScreenRoutine());
     }
 
     private void SendNotes(Request request)
@@ -201,11 +209,11 @@ public class RequestModal : MonoBehaviour
         request.notes = _notesInput.text;
         request.timeCompleted = "";
         request.handler = "";
-        StartCoroutine(UpdateSheetDataRoutine(request));
+        StartCoroutine(UpdateSheetDataRoutine(request, false));
         HideModal();
     }
     
-    private void GenerateModalContent(Request request)
+    public void GenerateModalContent(Request request)
     {
         _timeReceived.text = request.timeReceived.Substring(1, request.timeReceived.Length -2);
         _area.text = request.area;
@@ -214,10 +222,19 @@ public class RequestModal : MonoBehaviour
         _logType.text = request.type;
         _priority.text = request.priority;
         _requester.text = request.submitter;
-    }   
+    }
 
-    IEnumerator UpdateSheetDataRoutine(Request request)
+    public void UpdateModalUI(Request request)
     {
+        if (request.priority == "High")
+            _modal.AddToClassList("highPriority");
+        else
+            _modal.RemoveFromClassList("highPriority");
+    }
+
+    IEnumerator UpdateSheetDataRoutine(Request request, bool completeRequest)
+    {
+        if (completeRequest){yield return new WaitForSeconds(_waitTimeBeforeCompletingRequest);}
         WWWForm form = new WWWForm();
         form.AddField("entry.715305477", request.id);
         form.AddField("entry.530669248", request.status);
@@ -235,4 +252,15 @@ public class RequestModal : MonoBehaviour
                 Debug.LogError("Error in feedback submission: " + www.error);
         }
     }
+
+    IEnumerator ShowLoadingScreenRoutine()
+    {
+        _requestUI.ShowLoadingScreen(true);
+        yield return new WaitForSeconds(_loadingScreenDuration);
+        _requestUI.ShowLoadingScreen(false);
+        HideModal();
+    }
+
+    public bool IsModalOpen(){ return _isOpen;}
+    public string GetCurrentRequestID(){return _id;}
 }

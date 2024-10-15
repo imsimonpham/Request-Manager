@@ -227,6 +227,7 @@ MonoBehaviour:
   _requestManager: {fileID: 2057400232}
   _pendingRequestsTab: {fileID: 2057400234}
   _archivedRequestsTab: {fileID: 2057400235}
+  _requestModal: {fileID: 2057400233}
   _requestList: []
   _archivedRequestList: []
 --- !u!1 &531654761
@@ -421,6 +422,8 @@ MonoBehaviour:
   _archivedRequestsTab: {fileID: 2057400235}
   _pendingRequestsTab: {fileID: 2057400234}
   _requestManager: {fileID: 2057400232}
+  _waitTimeBeforeCompletingRequest: 3
+  _loadingScreenDuration: 3
 --- !u!114 &2057400234
 MonoBehaviour:
   m_ObjectHideFlags: 0

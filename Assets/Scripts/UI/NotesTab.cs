@@ -5,6 +5,7 @@ public class NotesTab : MonoBehaviour
 {
     [SerializeField] private RequestUI _requestUI;
     [SerializeField] private UIUtilities _uiUtilities;
+    
     private VisualElement _notesTab;
     private VisualElement _textContainer;
     private Label _tabTitle;
