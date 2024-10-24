@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections;
@@ -13,7 +12,12 @@ public class RequestManager : MonoBehaviour
     [SerializeField] private ArchivedRequestsTab _archivedRequestsTab;
     [SerializeField] private RequestModal _requestModal;
     [SerializeField] private UIUtilities _uiUtilities;
-    private string _url = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
+    
+    //dev
+    private string _formUrl_HP_Dev = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
+    
+    //prod
+    private string _formUrl_HP_Prod = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfYl2L0Bgta-tV42j2ap9G1swfVY8PEYmoY0kcGDio3AAuVng/formResponse";
 
     public void CreateRequestCard(Request request)
     {
@@ -38,7 +42,7 @@ public class RequestManager : MonoBehaviour
         var bottomContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomContainer", requestCard);
         
         var timeReceived = _uiUtilities.CreateAndAddToParent<Label>("h4 grey", bottomContainer);
-        _uiUtilities.UpdateLabel(timeReceived, request.timeReceived.Substring(1, request.timeReceived.Length -2), "timeReceived");
+        _uiUtilities.UpdateLabel(timeReceived, request.timeReceived, "timeReceived");
         
         var priorityText = _uiUtilities.CreateAndAddToParent<Label>("h4 bold", bottomContainer);
         var priority = request.priority == "High" ? "High priority" : "";
@@ -71,7 +75,7 @@ public class RequestManager : MonoBehaviour
         var bottomContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomContainer", leftCol);
         
         var timeReceived = _uiUtilities.CreateAndAddToParent<Label>("h4 grey", bottomContainer);
-        _uiUtilities.UpdateLabel(timeReceived, request.timeReceived.Substring(1, request.timeReceived.Length -2), "timeReceived");
+        _uiUtilities.UpdateLabel(timeReceived, request.timeReceived, "timeReceived");
         
         var timeCompleted = _uiUtilities.CreateAndAddToParent<Label>("h4 grey", bottomContainer);
         _uiUtilities.UpdateLabel(timeCompleted, _uiUtilities.GetCurrentTime(), "timeCompleted");
@@ -209,14 +213,14 @@ public class RequestManager : MonoBehaviour
     IEnumerator RestoreRequestRoutine(Request request)
     {
         WWWForm form = new WWWForm();
-        form.AddField("entry.715305477", request.id);
-        form.AddField("entry.530669248", request.status);
-        form.AddField("entry.1190988772", request.notes);
-        form.AddField("entry.196062821", request.timeCompleted);
-        form.AddField("entry.1883248811", request.handler);
-        form.AddField("entry.1142493925", request.isViewed);
+        form.AddField(_sheetManager.IsDev() ? "entry.715305477" : "entry.1210669559", request.id);
+        form.AddField(_sheetManager.IsDev() ? "entry.530669248" : "entry.225830786", request.status);
+        form.AddField(_sheetManager.IsDev() ? "entry.1190988772" : "entry.1907341931", request.notes);
+        form.AddField(_sheetManager.IsDev() ? "entry.196062821" : "entry.2117647377", request.timeCompleted);
+        form.AddField(_sheetManager.IsDev() ? "entry.1883248811" : "entry.383433174", request.handler);
+        form.AddField(_sheetManager.IsDev() ? "entry.1142493925" : "entry.844543065", request.isViewed);
 
-        using (UnityWebRequest www = UnityWebRequest.Post(_url, form))
+        using (UnityWebRequest www = UnityWebRequest.Post(_sheetManager.IsDev() ? _formUrl_HP_Dev : _formUrl_HP_Prod, form))
         {
             yield return www.SendWebRequest();
             if(www.result == UnityWebRequest.Result.Success)

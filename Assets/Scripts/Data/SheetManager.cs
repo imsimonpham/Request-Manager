@@ -1,9 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class SheetManager : MonoBehaviour
 {
@@ -11,11 +11,15 @@ public class SheetManager : MonoBehaviour
     private string _baseURL = "https://sheets.googleapis.com/v4/spreadsheets/";
     private string _property = "/values/";
     private string _keyString = "?key=";
-    private string _tabName = "Today";
+    private string _tabName_Dev = "Dev";
+    private string _tabName_Prod = "Today";
+    
+    private string _sheetUrl;
+    private bool _isDev = true; //switch between dev and prod
+    
+    //dev
     private string _apiKey = "AIzaSyCCzE8MUPDIQPFovwiYAgmaZBtA5Y1_lHs";
     private string _sheetId = "16ZNq8X-tG6_l7dOviIyPOnpbjfgaqsFocbO5aRvzLPo";
-    private string _sheetUrl;
-    private string _formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
  
     [Header("UI")] 
     [SerializeField] private RequestUI _requestUI;
@@ -29,6 +33,9 @@ public class SheetManager : MonoBehaviour
     [SerializeField] private RequestModal _requestModal;
     [SerializeField] private List<Request> _requestList= new List<Request>(); //for debug purposes
     [SerializeField] private List<Request> _archivedRequestList= new List<Request>(); //debug
+
+    [Header("Internet Connectivity")] 
+    [SerializeField] private Connectivity _connectivity;
     
 
     private void Awake()
@@ -39,8 +46,13 @@ public class SheetManager : MonoBehaviour
 
     private void Start()
     {
-        _sheetUrl = _baseURL + _sheetId + _property + _tabName + _keyString + _apiKey;
-        InvokeRepeating("ObtainSheetData", 0f, 1f);
+        _sheetUrl = _isDev 
+            ? _baseURL + _sheetId + _property + _tabName_Dev + _keyString + _apiKey 
+            : _baseURL + _sheetId + _property + _tabName_Prod + _keyString + _apiKey;
+        
+        Debug.Log(_sheetUrl);
+
+        InvokeRepeating("ObtainSheetData", 0f, 2f);
         InvokeRepeating("UpdatePendingRequestCountUI", 0f, 0.5f);
         InvokeRepeating("UpdateArchivedRequestCountUI", 0f, 0.5f);
     }
@@ -52,6 +64,9 @@ public class SheetManager : MonoBehaviour
 
     IEnumerator ObtainSheetDataRoutine()
     {
+        if (!_connectivity.IsConnectedToInternet())
+            SceneManager.LoadScene("Login");
+        
         UnityWebRequest webRequest = UnityWebRequest.Get(_sheetUrl);
         yield return webRequest.SendWebRequest();
 
@@ -142,5 +157,6 @@ public class SheetManager : MonoBehaviour
 
     private void UpdatePendingRequestCountUI(){ _pendingRequestsTab.UpdatePendingRequestCountUI(_requestDict.Count);}
     private void UpdateArchivedRequestCountUI(){ _archivedRequestsTab.UpdateArchivedRequestCountUI(_archivedRequestDict.Count);}
+    public bool IsDev(){ return _isDev;}
 }
 

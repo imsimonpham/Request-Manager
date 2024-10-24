@@ -42,8 +42,7 @@ public class RequestUI : MonoBehaviour
         StartCoroutine(GenerateUIRoutine());
     }
 
-    public IEnumerator GenerateUIRoutine()
-    
+    private IEnumerator GenerateUIRoutine()
     {
         yield return null;
         _root = _doc.rootVisualElement;
@@ -77,9 +76,9 @@ public class RequestUI : MonoBehaviour
     private void GenerateBottomMenu()
     {
         _bottomMenu = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomMenu", _root);
-        _pendingTasksIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
-        _archivedTasksIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
-        _notesIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("bottomIcon", _bottomMenu);
+        _pendingTasksIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("icon", _bottomMenu);
+        _archivedTasksIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("icon", _bottomMenu);
+        _notesIconContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("icon", _bottomMenu);
         _pendingTasksIconContainer.name = "pendingTaskIconContainer";
         _archivedTasksIconContainer.name = "archivedTasksIconContainer";
         _notesIconContainer.name = "notesIconContainer";

@@ -12,9 +12,13 @@ public class RequestModal : MonoBehaviour
     [SerializeField] private RequestManager _requestManager;
     [SerializeField] private float _waitTimeBeforeCompletingRequest;
     [SerializeField] private float _loadingScreenDuration;
+    [SerializeField] private SheetManager _sheetManager;
     
     //send data to google from
-    private string _formUrl = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
+    private string _formUrl_HP_Dev = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfsKNFIN2RQIx37zLb0Sj2ynBhfyWqB0Z2zrJhJco6B40wjbw/formResponse";
+    
+    //prod
+    private string _formUrl_HP_Prod = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfYl2L0Bgta-tV42j2ap9G1swfVY8PEYmoY0kcGDio3AAuVng/formResponse";
     
     //modal
     private bool _isOpen;
@@ -118,24 +122,6 @@ public class RequestModal : MonoBehaviour
         _completionBtn.text = "Complete request";
         
         _completionBtn.RegisterCallback<ClickEvent>(_ => CompleteRequest(_currentRequest));
-        
-        /*var requestSample = new Request
-        {
-            id = "1",
-            timeReceived = "'12:00:00 PM'",
-            area = "Discovering new places often leads to unforgettable experiences and personal gro", 
-            guestName = "John",
-            details = "Discovering new places often leads to unforgettable experiences and personal growth. Every journey teaches us valuable lessons and opens our minds to new possibilities. Embrace",
-            type = "Guest Request",
-            receiver = "Houseperson",
-            priority = "High",
-            submitter = "SP",
-            status = "On-going",
-            notes = "",
-            timeCompleted = "",
-            handler = ""
-        };
-        GenerateModalContent(requestSample);*/
     }
     
     private void ValidateInitialInput()
@@ -215,7 +201,7 @@ public class RequestModal : MonoBehaviour
     
     public void GenerateModalContent(Request request)
     {
-        _timeReceived.text = request.timeReceived.Substring(1, request.timeReceived.Length -2);
+        _timeReceived.text = request.timeReceived;
         _area.text = request.area;
         _guestName.text = request.guestName;
         _request.text = request.details;
@@ -236,14 +222,14 @@ public class RequestModal : MonoBehaviour
     {
         if (completeRequest){yield return new WaitForSeconds(_waitTimeBeforeCompletingRequest);}
         WWWForm form = new WWWForm();
-        form.AddField("entry.715305477", request.id);
-        form.AddField("entry.530669248", request.status);
-        form.AddField("entry.1190988772", request.notes);
-        form.AddField("entry.196062821", request.timeCompleted);
-        form.AddField("entry.1883248811", request.handler);
-        form.AddField("entry.1142493925", request.isViewed);
+        form.AddField(_sheetManager.IsDev() ? "entry.715305477" : "entry.1210669559", request.id);
+        form.AddField(_sheetManager.IsDev() ? "entry.530669248" : "entry.225830786", request.status);
+        form.AddField(_sheetManager.IsDev() ? "entry.1190988772" : "entry.1907341931", request.notes);
+        form.AddField(_sheetManager.IsDev() ? "entry.196062821" : "entry.2117647377", request.timeCompleted);
+        form.AddField(_sheetManager.IsDev() ? "entry.1883248811" : "entry.383433174", request.handler);
+        form.AddField(_sheetManager.IsDev() ? "entry.1142493925" : "entry.844543065", request.isViewed);
 
-        using (UnityWebRequest www = UnityWebRequest.Post(_formUrl, form))
+        using (UnityWebRequest www = UnityWebRequest.Post(_sheetManager.IsDev() ? _formUrl_HP_Dev : _formUrl_HP_Prod, form))
         {
             yield return www.SendWebRequest();
             if(www.result == UnityWebRequest.Result.Success)

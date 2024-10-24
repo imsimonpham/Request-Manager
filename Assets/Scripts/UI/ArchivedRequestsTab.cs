@@ -55,7 +55,6 @@ public class ArchivedRequestsTab : MonoBehaviour
     {
         _requestCount = requestCount;
         _tabTitleText = _tabTitleTextBase + " (" + _requestCount + ")";
-        /*_uiUtilities.UpdateLabel(_tabTitle, _tabTitleText, "tabTitle");*/
         _uiUtilities.UpdateLabel(_tabTitle == null ? new Label("Archived Requests") : _tabTitle, _tabTitleText, "tabTitle");
     }
 }

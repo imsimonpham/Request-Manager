@@ -21,10 +21,6 @@ public class NotesTab : MonoBehaviour
         _notesTab.AddToClassList("hide");
         
         //create text container
-        /*_textContainer = new ScrollView(ScrollViewMode.Vertical);
-        _textContainer.AddToClassList("textContainer");
-        _textContainer.touchScrollBehavior = ScrollView.TouchScrollBehavior.Clamped;
-        _notesTab.Add(_textContainer);*/
         _textContainer = _uiUtilities.CreateAndAddToParent<VisualElement>("textContainer", _notesTab);
         
         //note field
