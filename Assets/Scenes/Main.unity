@@ -483,6 +483,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _requestUI: {fileID: 2057400230}
   _uiUtilities: {fileID: 2057400231}
+  _notes: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

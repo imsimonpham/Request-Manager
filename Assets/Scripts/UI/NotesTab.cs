@@ -27,8 +27,21 @@ public class NotesTab : MonoBehaviour
         _notesInput = _uiUtilities.CreateAndAddToParent<TextField>("notesTextField margin_bottom_lg", _textContainer);
         _notesInput.multiline = true;
         
+        LoadNote();
+        InvokeRepeating("SaveNote", 0, 0.1f);
+    }
+
+    private void SaveNote()
+    {
+        PlayerPrefs.SetString("SavedNote", _notesInput.text);
+        PlayerPrefs.Save();
+    }
+    
+    private void LoadNote()
+    {
+        if (PlayerPrefs.HasKey("SavedNote"))
+            _notesInput.value = PlayerPrefs.GetString("SavedNote");
     }
     
     public VisualElement GetNotesTab() {return _notesTab;}
-    public VisualElement GetTextContainer() {return _textContainer;}
 }

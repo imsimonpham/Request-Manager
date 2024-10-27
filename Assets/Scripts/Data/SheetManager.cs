@@ -49,8 +49,6 @@ public class SheetManager : MonoBehaviour
         _sheetUrl = _isDev 
             ? _baseURL + _sheetId + _property + _tabName_Dev + _keyString + _apiKey 
             : _baseURL + _sheetId + _property + _tabName_Prod + _keyString + _apiKey;
-        
-        Debug.Log(_sheetUrl);
 
         InvokeRepeating("ObtainSheetData", 0f, 2f);
         InvokeRepeating("UpdatePendingRequestCountUI", 0f, 0.5f);
@@ -118,7 +116,7 @@ public class SheetManager : MonoBehaviour
             submitter = item[8],
             status = item[9],
             notes = "",
-            timeCompleted = "",
+            timeCompleted = item[11],
             handler = "",
             isViewed =  item[13]
         };
